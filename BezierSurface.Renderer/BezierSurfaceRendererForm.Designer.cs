@@ -28,7 +28,6 @@ partial class BezierSurfaceRendererForm
     /// </summary>
     private void InitializeComponent()
     {
-        components = new System.ComponentModel.Container();
         var resources = new System.ComponentModel.ComponentResourceManager(typeof(BezierSurfaceRendererForm));
         TableLayoutPanel = new TableLayoutPanel();
         MainMenu = new MenuStrip();
@@ -40,6 +39,10 @@ partial class BezierSurfaceRendererForm
         UserguideToolStripMenuItem = new ToolStripMenuItem();
         PictureBox = new PictureBox();
         panel1 = new Panel();
+        NormalMapGroupBox = new GroupBox();
+        tableLayoutPanel4 = new TableLayoutPanel();
+        EnableNormalMapCheckBox = new CheckBox();
+        SelectNormalMapButton = new Button();
         ReflectionPropertiesGroupBox = new GroupBox();
         tableLayoutPanel3 = new TableLayoutPanel();
         ObjectColorButton = new Button();
@@ -73,11 +76,12 @@ partial class BezierSurfaceRendererForm
         ResolutionTrackBarValueLabel = new Label();
         AlphaAngleTrackBarValueLabel = new Label();
         BetaAngleTrackBarValueLabel = new Label();
-        TrackBarToolTip = new ToolTip(components);
         TableLayoutPanel.SuspendLayout();
         MainMenu.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)PictureBox).BeginInit();
         panel1.SuspendLayout();
+        NormalMapGroupBox.SuspendLayout();
+        tableLayoutPanel4.SuspendLayout();
         ReflectionPropertiesGroupBox.SuspendLayout();
         tableLayoutPanel3.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)SpecularCoefficientTrackBar).BeginInit();
@@ -131,7 +135,7 @@ partial class BezierSurfaceRendererForm
         // 
         ImportSurfaceToolStripMenuItem.Image = (Image)resources.GetObject("ImportSurfaceToolStripMenuItem.Image");
         ImportSurfaceToolStripMenuItem.Name = "ImportSurfaceToolStripMenuItem";
-        ImportSurfaceToolStripMenuItem.Size = new Size(224, 26);
+        ImportSurfaceToolStripMenuItem.Size = new Size(190, 26);
         ImportSurfaceToolStripMenuItem.Text = "&Import Surface";
         ImportSurfaceToolStripMenuItem.Click += ImportSurfaceToolStripMenuItem_Click;
         // 
@@ -139,7 +143,7 @@ partial class BezierSurfaceRendererForm
         // 
         ExitToolStripMenuItem.Image = (Image)resources.GetObject("ExitToolStripMenuItem.Image");
         ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-        ExitToolStripMenuItem.Size = new Size(224, 26);
+        ExitToolStripMenuItem.Size = new Size(190, 26);
         ExitToolStripMenuItem.Text = "&Exit";
         ExitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
         // 
@@ -154,7 +158,7 @@ partial class BezierSurfaceRendererForm
         // 
         AboutToolStripMenuItem.Image = (Image)resources.GetObject("AboutToolStripMenuItem.Image");
         AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-        AboutToolStripMenuItem.Size = new Size(224, 26);
+        AboutToolStripMenuItem.Size = new Size(159, 26);
         AboutToolStripMenuItem.Text = "&About";
         AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
         // 
@@ -162,7 +166,7 @@ partial class BezierSurfaceRendererForm
         // 
         UserguideToolStripMenuItem.Image = (Image)resources.GetObject("UserguideToolStripMenuItem.Image");
         UserguideToolStripMenuItem.Name = "UserguideToolStripMenuItem";
-        UserguideToolStripMenuItem.Size = new Size(224, 26);
+        UserguideToolStripMenuItem.Size = new Size(159, 26);
         UserguideToolStripMenuItem.Text = "&Userguide";
         UserguideToolStripMenuItem.Click += UserguideToolStripMenuItem_Click;
         // 
@@ -178,6 +182,7 @@ partial class BezierSurfaceRendererForm
         // panel1
         // 
         panel1.AutoScroll = true;
+        panel1.Controls.Add(NormalMapGroupBox);
         panel1.Controls.Add(ReflectionPropertiesGroupBox);
         panel1.Controls.Add(LightSourceGroupBox);
         panel1.Controls.Add(TriangulationGroupBox);
@@ -188,11 +193,64 @@ partial class BezierSurfaceRendererForm
         panel1.Size = new Size(475, 740);
         panel1.TabIndex = 2;
         // 
+        // NormalMapGroupBox
+        // 
+        NormalMapGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        NormalMapGroupBox.Controls.Add(tableLayoutPanel4);
+        NormalMapGroupBox.Location = new Point(12, 483);
+        NormalMapGroupBox.Name = "NormalMapGroupBox";
+        NormalMapGroupBox.Size = new Size(454, 154);
+        NormalMapGroupBox.TabIndex = 3;
+        NormalMapGroupBox.TabStop = false;
+        NormalMapGroupBox.Text = "Normal Map";
+        // 
+        // tableLayoutPanel4
+        // 
+        tableLayoutPanel4.ColumnCount = 3;
+        tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+        tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+        tableLayoutPanel4.Controls.Add(EnableNormalMapCheckBox, 0, 0);
+        tableLayoutPanel4.Controls.Add(SelectNormalMapButton, 1, 0);
+        tableLayoutPanel4.Dock = DockStyle.Fill;
+        tableLayoutPanel4.Location = new Point(3, 23);
+        tableLayoutPanel4.Name = "tableLayoutPanel4";
+        tableLayoutPanel4.RowCount = 4;
+        tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        tableLayoutPanel4.Size = new Size(448, 128);
+        tableLayoutPanel4.TabIndex = 0;
+        // 
+        // EnableNormalMapCheckBox
+        // 
+        EnableNormalMapCheckBox.AutoSize = true;
+        EnableNormalMapCheckBox.Dock = DockStyle.Fill;
+        EnableNormalMapCheckBox.Location = new Point(3, 3);
+        EnableNormalMapCheckBox.Name = "EnableNormalMapCheckBox";
+        EnableNormalMapCheckBox.Size = new Size(173, 26);
+        EnableNormalMapCheckBox.TabIndex = 13;
+        EnableNormalMapCheckBox.Text = "Enable";
+        EnableNormalMapCheckBox.UseVisualStyleBackColor = true;
+        EnableNormalMapCheckBox.CheckedChanged += EnableNormalMapCheckBox_CheckedChanged;
+        // 
+        // SelectNormalMapButton
+        // 
+        SelectNormalMapButton.Enabled = false;
+        SelectNormalMapButton.Location = new Point(182, 3);
+        SelectNormalMapButton.Name = "SelectNormalMapButton";
+        SelectNormalMapButton.Size = new Size(94, 26);
+        SelectNormalMapButton.TabIndex = 14;
+        SelectNormalMapButton.Text = "Select";
+        SelectNormalMapButton.UseVisualStyleBackColor = true;
+        SelectNormalMapButton.Click += SelectNormalMapButton_Click;
+        // 
         // ReflectionPropertiesGroupBox
         // 
         ReflectionPropertiesGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         ReflectionPropertiesGroupBox.Controls.Add(tableLayoutPanel3);
-        ReflectionPropertiesGroupBox.Location = new Point(12, 314);
+        ReflectionPropertiesGroupBox.Location = new Point(12, 323);
         ReflectionPropertiesGroupBox.Name = "ReflectionPropertiesGroupBox";
         ReflectionPropertiesGroupBox.Size = new Size(454, 154);
         ReflectionPropertiesGroupBox.TabIndex = 2;
@@ -203,8 +261,8 @@ partial class BezierSurfaceRendererForm
         // 
         tableLayoutPanel3.ColumnCount = 3;
         tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
-        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
         tableLayoutPanel3.Controls.Add(ObjectColorButton, 1, 3);
         tableLayoutPanel3.Controls.Add(ObjectColorLabel, 0, 3);
         tableLayoutPanel3.Controls.Add(SpecularCoefficientLabel, 0, 1);
@@ -282,17 +340,21 @@ partial class BezierSurfaceRendererForm
         SpecularCoefficientTrackBar.Location = new Point(182, 35);
         SpecularCoefficientTrackBar.Maximum = 100;
         SpecularCoefficientTrackBar.Name = "SpecularCoefficientTrackBar";
-        SpecularCoefficientTrackBar.Size = new Size(195, 26);
+        SpecularCoefficientTrackBar.Size = new Size(218, 26);
         SpecularCoefficientTrackBar.TabIndex = 4;
+        SpecularCoefficientTrackBar.Scroll += SpecularCoefficientTrackBar_Scroll;
         // 
         // ShininessExponentTrackBar
         // 
         ShininessExponentTrackBar.Dock = DockStyle.Fill;
         ShininessExponentTrackBar.Location = new Point(182, 67);
         ShininessExponentTrackBar.Maximum = 100;
+        ShininessExponentTrackBar.Minimum = 1;
         ShininessExponentTrackBar.Name = "ShininessExponentTrackBar";
-        ShininessExponentTrackBar.Size = new Size(195, 26);
+        ShininessExponentTrackBar.Size = new Size(218, 26);
         ShininessExponentTrackBar.TabIndex = 5;
+        ShininessExponentTrackBar.Value = 1;
+        ShininessExponentTrackBar.Scroll += ShininessExponentTrackBar_Scroll;
         // 
         // DiffuseCoefficientTrackBar
         // 
@@ -300,34 +362,39 @@ partial class BezierSurfaceRendererForm
         DiffuseCoefficientTrackBar.Location = new Point(182, 3);
         DiffuseCoefficientTrackBar.Maximum = 100;
         DiffuseCoefficientTrackBar.Name = "DiffuseCoefficientTrackBar";
-        DiffuseCoefficientTrackBar.Size = new Size(195, 26);
+        DiffuseCoefficientTrackBar.Size = new Size(218, 26);
         DiffuseCoefficientTrackBar.TabIndex = 6;
+        DiffuseCoefficientTrackBar.Scroll += DiffuseCoefficientTrackBar_Scroll;
         // 
         // SpecularCoefficientTrackBarValueLabel
         // 
         SpecularCoefficientTrackBarValueLabel.AutoSize = true;
         SpecularCoefficientTrackBarValueLabel.Dock = DockStyle.Fill;
-        SpecularCoefficientTrackBarValueLabel.Location = new Point(383, 32);
+        SpecularCoefficientTrackBarValueLabel.Location = new Point(406, 32);
         SpecularCoefficientTrackBarValueLabel.Name = "SpecularCoefficientTrackBarValueLabel";
-        SpecularCoefficientTrackBarValueLabel.Size = new Size(62, 32);
+        SpecularCoefficientTrackBarValueLabel.Size = new Size(39, 32);
         SpecularCoefficientTrackBarValueLabel.TabIndex = 7;
+        SpecularCoefficientTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // ShininessExponentTrackBarValueLabel
         // 
         ShininessExponentTrackBarValueLabel.AutoSize = true;
         ShininessExponentTrackBarValueLabel.Dock = DockStyle.Fill;
-        ShininessExponentTrackBarValueLabel.Location = new Point(383, 64);
+        ShininessExponentTrackBarValueLabel.Location = new Point(406, 64);
         ShininessExponentTrackBarValueLabel.Name = "ShininessExponentTrackBarValueLabel";
-        ShininessExponentTrackBarValueLabel.Size = new Size(62, 32);
+        ShininessExponentTrackBarValueLabel.Size = new Size(39, 32);
         ShininessExponentTrackBarValueLabel.TabIndex = 8;
+        ShininessExponentTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // DiffuseCoefficientTrackBarValueLabel
         // 
         DiffuseCoefficientTrackBarValueLabel.AutoSize = true;
-        DiffuseCoefficientTrackBarValueLabel.Location = new Point(383, 0);
+        DiffuseCoefficientTrackBarValueLabel.Dock = DockStyle.Fill;
+        DiffuseCoefficientTrackBarValueLabel.Location = new Point(406, 0);
         DiffuseCoefficientTrackBarValueLabel.Name = "DiffuseCoefficientTrackBarValueLabel";
-        DiffuseCoefficientTrackBarValueLabel.Size = new Size(0, 20);
+        DiffuseCoefficientTrackBarValueLabel.Size = new Size(39, 32);
         DiffuseCoefficientTrackBarValueLabel.TabIndex = 10;
+        DiffuseCoefficientTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // LightSourceGroupBox
         // 
@@ -344,8 +411,8 @@ partial class BezierSurfaceRendererForm
         // 
         tableLayoutPanel2.ColumnCount = 3;
         tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
         tableLayoutPanel2.Controls.Add(LightSourceAnimationCheckBox, 0, 0);
         tableLayoutPanel2.Controls.Add(LightSourceDistanceLabel, 0, 1);
         tableLayoutPanel2.Controls.Add(LightSourceColorLabel, 0, 2);
@@ -399,8 +466,9 @@ partial class BezierSurfaceRendererForm
         LightSourceDistanceTrackBar.Dock = DockStyle.Fill;
         LightSourceDistanceTrackBar.Location = new Point(182, 35);
         LightSourceDistanceTrackBar.Name = "LightSourceDistanceTrackBar";
-        LightSourceDistanceTrackBar.Size = new Size(195, 26);
+        LightSourceDistanceTrackBar.Size = new Size(218, 26);
         LightSourceDistanceTrackBar.TabIndex = 3;
+        LightSourceDistanceTrackBar.Scroll += LightSourceDistanceTrackBar_Scroll;
         // 
         // LightSourceColorButton
         // 
@@ -415,10 +483,11 @@ partial class BezierSurfaceRendererForm
         // 
         LightSourceDistanceTrackBarValueLabel.AutoSize = true;
         LightSourceDistanceTrackBarValueLabel.Dock = DockStyle.Fill;
-        LightSourceDistanceTrackBarValueLabel.Location = new Point(383, 32);
+        LightSourceDistanceTrackBarValueLabel.Location = new Point(406, 32);
         LightSourceDistanceTrackBarValueLabel.Name = "LightSourceDistanceTrackBarValueLabel";
-        LightSourceDistanceTrackBarValueLabel.Size = new Size(62, 32);
+        LightSourceDistanceTrackBarValueLabel.Size = new Size(39, 32);
         LightSourceDistanceTrackBarValueLabel.TabIndex = 5;
+        LightSourceDistanceTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // TriangulationGroupBox
         // 
@@ -435,8 +504,8 @@ partial class BezierSurfaceRendererForm
         // 
         tableLayoutPanel1.ColumnCount = 3;
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
         tableLayoutPanel1.Controls.Add(ShowGridCheckBox, 0, 0);
         tableLayoutPanel1.Controls.Add(ResolutionLabel, 0, 1);
         tableLayoutPanel1.Controls.Add(AlphaLabel, 0, 2);
@@ -455,7 +524,6 @@ partial class BezierSurfaceRendererForm
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
         tableLayoutPanel1.Size = new Size(448, 128);
         tableLayoutPanel1.TabIndex = 0;
         // 
@@ -505,8 +573,9 @@ partial class BezierSurfaceRendererForm
         ResolutionTrackBar.Dock = DockStyle.Fill;
         ResolutionTrackBar.Location = new Point(182, 35);
         ResolutionTrackBar.Name = "ResolutionTrackBar";
-        ResolutionTrackBar.Size = new Size(195, 26);
+        ResolutionTrackBar.Size = new Size(218, 26);
         ResolutionTrackBar.TabIndex = 4;
+        ResolutionTrackBar.Scroll += ResolutionTrackBar_Scroll;
         // 
         // AlphaAngleTrackBar
         // 
@@ -515,43 +584,48 @@ partial class BezierSurfaceRendererForm
         AlphaAngleTrackBar.Maximum = 45;
         AlphaAngleTrackBar.Minimum = -45;
         AlphaAngleTrackBar.Name = "AlphaAngleTrackBar";
-        AlphaAngleTrackBar.Size = new Size(195, 26);
+        AlphaAngleTrackBar.Size = new Size(218, 26);
         AlphaAngleTrackBar.TabIndex = 5;
+        AlphaAngleTrackBar.Scroll += AlphaAngleTrackBar_Scroll;
         // 
         // BetaAngleTrackBar
         // 
         BetaAngleTrackBar.Dock = DockStyle.Fill;
         BetaAngleTrackBar.Location = new Point(182, 99);
         BetaAngleTrackBar.Name = "BetaAngleTrackBar";
-        BetaAngleTrackBar.Size = new Size(195, 26);
+        BetaAngleTrackBar.Size = new Size(218, 26);
         BetaAngleTrackBar.TabIndex = 6;
+        BetaAngleTrackBar.Scroll += BetaAngleTrackBar_Scroll;
         // 
         // ResolutionTrackBarValueLabel
         // 
         ResolutionTrackBarValueLabel.AutoSize = true;
         ResolutionTrackBarValueLabel.Dock = DockStyle.Fill;
-        ResolutionTrackBarValueLabel.Location = new Point(383, 32);
+        ResolutionTrackBarValueLabel.Location = new Point(406, 32);
         ResolutionTrackBarValueLabel.Name = "ResolutionTrackBarValueLabel";
-        ResolutionTrackBarValueLabel.Size = new Size(62, 32);
+        ResolutionTrackBarValueLabel.Size = new Size(39, 32);
         ResolutionTrackBarValueLabel.TabIndex = 7;
+        ResolutionTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // AlphaAngleTrackBarValueLabel
         // 
         AlphaAngleTrackBarValueLabel.AutoSize = true;
         AlphaAngleTrackBarValueLabel.Dock = DockStyle.Fill;
-        AlphaAngleTrackBarValueLabel.Location = new Point(383, 64);
+        AlphaAngleTrackBarValueLabel.Location = new Point(406, 64);
         AlphaAngleTrackBarValueLabel.Name = "AlphaAngleTrackBarValueLabel";
-        AlphaAngleTrackBarValueLabel.Size = new Size(62, 32);
+        AlphaAngleTrackBarValueLabel.Size = new Size(39, 32);
         AlphaAngleTrackBarValueLabel.TabIndex = 8;
+        AlphaAngleTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // BetaAngleTrackBarValueLabel
         // 
         BetaAngleTrackBarValueLabel.AutoSize = true;
         BetaAngleTrackBarValueLabel.Dock = DockStyle.Fill;
-        BetaAngleTrackBarValueLabel.Location = new Point(383, 96);
+        BetaAngleTrackBarValueLabel.Location = new Point(406, 96);
         BetaAngleTrackBarValueLabel.Name = "BetaAngleTrackBarValueLabel";
-        BetaAngleTrackBarValueLabel.Size = new Size(62, 32);
+        BetaAngleTrackBarValueLabel.Size = new Size(39, 32);
         BetaAngleTrackBarValueLabel.TabIndex = 9;
+        BetaAngleTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
         // 
         // BezierSurfaceRendererForm
         // 
@@ -571,6 +645,9 @@ partial class BezierSurfaceRendererForm
         MainMenu.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)PictureBox).EndInit();
         panel1.ResumeLayout(false);
+        NormalMapGroupBox.ResumeLayout(false);
+        tableLayoutPanel4.ResumeLayout(false);
+        tableLayoutPanel4.PerformLayout();
         ReflectionPropertiesGroupBox.ResumeLayout(false);
         tableLayoutPanel3.ResumeLayout(false);
         tableLayoutPanel3.PerformLayout();
@@ -611,7 +688,6 @@ partial class BezierSurfaceRendererForm
     private TrackBar ResolutionTrackBar;
     private TrackBar AlphaAngleTrackBar;
     private TrackBar BetaAngleTrackBar;
-    private ToolTip TrackBarToolTip;
     private Label ResolutionTrackBarValueLabel;
     private Label AlphaAngleTrackBarValueLabel;
     private Label BetaAngleTrackBarValueLabel;
@@ -636,4 +712,8 @@ partial class BezierSurfaceRendererForm
     private Label DiffuseCoefficientTrackBarValueLabel;
     private Button ObjectColorButton;
     private Label ObjectColorLabel;
+    private GroupBox NormalMapGroupBox;
+    private TableLayoutPanel tableLayoutPanel4;
+    private CheckBox EnableNormalMapCheckBox;
+    private Button SelectNormalMapButton;
 }

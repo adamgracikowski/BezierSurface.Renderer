@@ -1,5 +1,6 @@
 ﻿using BezierSurface.Renderer.Model;
 using BezierSurface.Renderer.Properties;
+using System.Globalization;
 
 namespace BezierSurface.Renderer;
 public partial class BezierSurfaceRendererForm : Form
@@ -9,6 +10,7 @@ public partial class BezierSurfaceRendererForm : Form
     public BezierSurfaceRendererForm()
     {
         InitializeComponent();
+        InitializeTrackBarLabels();
 
         var bezierSurface = LoadDefaultBezierSurface();
         RendererManager = new(bezierSurface);
@@ -106,5 +108,59 @@ public partial class BezierSurfaceRendererForm : Form
         }
 
         return bezierSurface;
+    }
+
+    private void ResolutionTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, ResolutionTrackBarValueLabel);
+    private void AlphaAngleTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, AlphaAngleTrackBarValueLabel);
+    private void BetaAngleTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, BetaAngleTrackBarValueLabel);
+    private void ShininessExponentTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, ShininessExponentTrackBarValueLabel);
+    private void LightSourceDistanceTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, LightSourceDistanceTrackBarValueLabel);
+    private void DiffuseCoefficientTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+    private void SpecularCoefficientTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+
+    private void UpdateTrackBarLabel(object sender, Label label, Func<float, string>? transformation = null)
+    {
+        if (sender is not TrackBar trackBar) return;
+
+        if (transformation != null)
+        {
+            label.Text = transformation(trackBar.Value);
+        }
+        else
+        {
+            label.Text = trackBar.Value.ToString();
+        }
+    }
+    private string TrackBarValueFormatFloat(float value)
+    {
+        return (value / 100.0f).ToString("N2", CultureInfo.InvariantCulture);
+    }
+    private void InitializeTrackBarLabels()
+    {
+        UpdateTrackBarLabel(ResolutionTrackBar, ResolutionTrackBarValueLabel);
+        UpdateTrackBarLabel(AlphaAngleTrackBar, AlphaAngleTrackBarValueLabel);
+        UpdateTrackBarLabel(BetaAngleTrackBar, BetaAngleTrackBarValueLabel);
+        UpdateTrackBarLabel(ShininessExponentTrackBar, ShininessExponentTrackBarValueLabel);
+        UpdateTrackBarLabel(LightSourceDistanceTrackBar, LightSourceDistanceTrackBarValueLabel);
+        UpdateTrackBarLabel(DiffuseCoefficientTrackBar, DiffuseCoefficientTrackBarValueLabel);
+        UpdateTrackBarLabel(SpecularCoefficientTrackBar, SpecularCoefficientTrackBarValueLabel);
+    }
+
+    private void EnableNormalMapCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        SelectNormalMapButton.Enabled = !SelectNormalMapButton.Enabled;
+    }
+
+    private void SelectNormalMapButton_Click(object sender, EventArgs e)
+    {
+        using var openFileDialog = new OpenFileDialog()
+        {
+            Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+            Title = "Select a Normal Map"
+        };
+
+        if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+        
+        // TODO: ustawienie normal map...
     }
 }
