@@ -1,0 +1,4 @@
+Bezier Surface Renderer is a simple application that allows for visualizing and manipulating a 3rd-degree Bézier surface loaded from text files.
+Users can apply various rotations to the surface, draw it in a triangular mesh form, and fill the mesh with color based on different lighting models.
+
+The project was completed as part of the Computer Graphics course at the Warsaw University of Technology during the winter semester of the 2024-2025 academic year.
