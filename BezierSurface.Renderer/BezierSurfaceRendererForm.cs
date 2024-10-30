@@ -153,14 +153,29 @@ public partial class BezierSurfaceRendererForm : Form
 
     private void SelectNormalMapButton_Click(object sender, EventArgs e)
     {
+        var initialDirectory = Path.Combine(Application.StartupPath, "Images");
+
+        if (!Directory.Exists(initialDirectory))
+        {
+            MessageBox.Show(
+                "Directory with default Normal Maps doesn't exist.",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+
+            return;
+        }
+
         using var openFileDialog = new OpenFileDialog()
         {
             Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
-            Title = "Select a Normal Map"
+            Title = "Select a Normal Map",
+            InitialDirectory = initialDirectory
         };
 
         if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-        
+
         // TODO: ustawienie normal map...
     }
 }
