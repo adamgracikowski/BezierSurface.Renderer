@@ -1,6 +1,7 @@
 ﻿using BezierSurface.Renderer.Model;
 using BezierSurface.Renderer.Properties;
 using System.Globalization;
+using System.Numerics;
 
 namespace BezierSurface.Renderer;
 public partial class BezierSurfaceRendererForm : Form
@@ -10,33 +11,45 @@ public partial class BezierSurfaceRendererForm : Form
     public BezierSurfaceRendererForm()
     {
         InitializeComponent();
+
+        var lambertModel = InitializeLambertModel();
+        var bezierSurface = LoadDefaultBezierSurface();
+        var bezierSurfaceMesh = new BezierSurfaceMesh(bezierSurface, BezierSurfaceMeshConstants.DefaultResolution);
+        
+        ResolutionTrackBar.Value = BezierSurfaceMeshConstants.DefaultResolution;
+
         InitializeTrackBarLabels();
 
-        var bezierSurface = LoadDefaultBezierSurface();
-        RendererManager = new(bezierSurface);
+        RendererManager = new(bezierSurfaceMesh, lambertModel, PictureBox);
+        RendererManager.Render();
     }
 
     private void LightSourceColorButton_Click(object sender, EventArgs e)
     {
-        using var colorDialog = new ColorDialog();
+        using var colorDialog = new ColorDialog()
+        {
+            Color = LightSourceColorButton.BackColor
+        };
 
         if (colorDialog.ShowDialog() != DialogResult.OK)
             return;
 
         LightSourceColorButton.BackColor = colorDialog.Color;
-
-        // TODO: zmiana koloru źródła światła...
+        RendererManager.LambertModel.LightColor = colorDialog.Color;
+        RendererManager.Render();
     }
-
     private void ObjectColorButton_Click(object sender, EventArgs e)
     {
-        using var colorDialog = new ColorDialog();
+        using var colorDialog = new ColorDialog()
+        {
+            Color = ObjectColorButton.BackColor
+        };
 
         if (colorDialog.ShowDialog() != DialogResult.OK) return;
 
         ObjectColorButton.BackColor = colorDialog.Color;
-
-        // TODO: zmiana koloru obiektu...
+        RendererManager.LambertModel.ObjectColor = colorDialog.Color;
+        RendererManager.Render();
     }
 
     private void ImportSurfaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,6 +85,8 @@ public partial class BezierSurfaceRendererForm : Form
 
     private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        RendererManager.Dispose();
+        DrawingStyles.Dispose();
         Application.Exit();
     }
 
@@ -110,13 +125,72 @@ public partial class BezierSurfaceRendererForm : Form
         return bezierSurface;
     }
 
-    private void ResolutionTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, ResolutionTrackBarValueLabel);
-    private void AlphaAngleTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, AlphaAngleTrackBarValueLabel);
-    private void BetaAngleTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, BetaAngleTrackBarValueLabel);
-    private void ShininessExponentTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, ShininessExponentTrackBarValueLabel);
-    private void LightSourceDistanceTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, LightSourceDistanceTrackBarValueLabel);
-    private void DiffuseCoefficientTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
-    private void SpecularCoefficientTrackBar_Scroll(object sender, EventArgs e) => UpdateTrackBarLabel(sender, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+    private LambertModel InitializeLambertModel()
+    {
+        DiffuseCoefficientTrackBar.Value = (int)(100 * LambertModelConstants.DefaultDiffuseCoefficient);
+        SpecularCoefficientTrackBar.Value = (int)(100 * LambertModelConstants.DefaultSpecularCoefficient);
+        ShininessExponentTrackBar.Value = LambertModelConstants.DefaultShininessExponent;
+        ObjectColorButton.BackColor = LambertModelConstants.DefaultObjectColor;
+        LightSourceColorButton.BackColor = LambertModelConstants.DefaultLightColor;
+        LightSourceDistanceTrackBar.Value = (int)LambertModelConstants.DefaultLightPosition.Z;
+
+        return new LambertModel();
+    }
+
+    private void ResolutionTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, ResolutionTrackBarValueLabel);
+        RendererManager.Resolution = (sender as TrackBar).Value;
+        RendererManager.Render();
+    }
+
+    private void AlphaAngleTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, AlphaAngleTrackBarValueLabel);
+        RendererManager.Alpha = (sender as TrackBar).Value;
+        RendererManager.Render();
+    }
+
+    private void BetaAngleTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, BetaAngleTrackBarValueLabel);
+        RendererManager.Beta = (sender as TrackBar).Value;
+        RendererManager.Render();
+    }
+
+    private void ShininessExponentTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, ShininessExponentTrackBarValueLabel);
+        RendererManager.LambertModel.ShininessExponent = (sender as TrackBar).Value;
+        RendererManager.Render();
+    }
+
+    private void LightSourceDistanceTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, LightSourceDistanceTrackBarValueLabel);
+
+        RendererManager.LambertModel.LightPosition = new Vector3(
+            RendererManager.LambertModel.LightPosition.X,
+            RendererManager.LambertModel.LightPosition.Y,
+            (sender as TrackBar).Value
+        );
+
+        RendererManager.Render();
+    }
+
+    private void DiffuseCoefficientTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+        RendererManager.LambertModel.DiffuseCoefficient = (sender as TrackBar).Value / 100.0f;
+        RendererManager.Render();
+    }
+
+    private void SpecularCoefficientTrackBar_Scroll(object sender, EventArgs e)
+    {
+        UpdateTrackBarLabel(sender, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+        RendererManager.LambertModel.SpecularCoefficient = (sender as TrackBar).Value / 100.0f;
+        RendererManager.Render();
+    }
 
     private void UpdateTrackBarLabel(object sender, Label label, Func<float, string>? transformation = null)
     {
@@ -142,8 +216,8 @@ public partial class BezierSurfaceRendererForm : Form
         UpdateTrackBarLabel(BetaAngleTrackBar, BetaAngleTrackBarValueLabel);
         UpdateTrackBarLabel(ShininessExponentTrackBar, ShininessExponentTrackBarValueLabel);
         UpdateTrackBarLabel(LightSourceDistanceTrackBar, LightSourceDistanceTrackBarValueLabel);
-        UpdateTrackBarLabel(DiffuseCoefficientTrackBar, DiffuseCoefficientTrackBarValueLabel);
-        UpdateTrackBarLabel(SpecularCoefficientTrackBar, SpecularCoefficientTrackBarValueLabel);
+        UpdateTrackBarLabel(DiffuseCoefficientTrackBar, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
+        UpdateTrackBarLabel(SpecularCoefficientTrackBar, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
     }
 
     private void EnableNormalMapCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -177,5 +251,17 @@ public partial class BezierSurfaceRendererForm : Form
         if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
         // TODO: ustawienie normal map...
+    }
+
+    private void ShowGridCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        RendererManager.ShowGrid = !RendererManager.ShowGrid;
+        RendererManager.Render();
+    }
+
+    private void ShowControlPointsCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        RendererManager.ShowControlPoints = !RendererManager.ShowControlPoints;
+        RendererManager.Render();
     }
 }

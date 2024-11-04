@@ -13,6 +13,14 @@ public sealed class BezierSurface
             ControlPointsInOneDimension,
             ControlPointsInOneDimension
         ];
+
+    public void Rotate(Matrix3 rotationX, Matrix3 rotationZ)
+    {
+        foreach(var controlPoint in ControlPoints)
+        {
+            controlPoint.Rotate(rotationX, rotationZ);
+        }
+    }
 }
 
 public static class BezierSurfaceFileLoader

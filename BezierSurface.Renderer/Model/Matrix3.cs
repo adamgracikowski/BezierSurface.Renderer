@@ -27,6 +27,8 @@ public sealed class Matrix3
 
     public static Matrix3 RotationZ(float alpha)
     {
+        alpha = DegreeToRadians(alpha);
+
         var cos = (float)Math.Cos(alpha);
         var sin = (float)Math.Sin(alpha);
 
@@ -42,6 +44,8 @@ public sealed class Matrix3
 
     public static Matrix3 RotationX(float alpha)
     {
+        alpha = DegreeToRadians(alpha);
+
         var cos = (float)Math.Cos(alpha);
         var sin = (float)Math.Sin(alpha);
 
@@ -53,5 +57,10 @@ public sealed class Matrix3
         };
 
         return new Matrix3(elements);
+    }
+
+    private static float DegreeToRadians(float degree)
+    {
+        return degree * (float)Math.PI / 180;
     }
 }

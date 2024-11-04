@@ -1,8 +1,22 @@
 ﻿using System.Numerics;
 
 namespace BezierSurface.Renderer.Model;
+
 public sealed class Vertex
 {
+    public Vertex(Vector3 position, Vector3 tangentU, Vector3 tangentV, Vector3 normal)
+    {
+        Position = position;
+        TangentU = tangentU;
+        TangentV = tangentV;
+        Normal = normal;
+
+        PositionAfterRotation = Position;
+        TangentUAfterRotation = TangentU;
+        TangentVAfterRotation = TangentV;
+        NormalAfterRotation = Normal;
+    }
+
     public Vector3 Position { get; set; }
     public Vector3 PositionAfterRotation { get; set; }
 
@@ -17,21 +31,11 @@ public sealed class Vertex
 
     public PointF Point => new(PositionAfterRotation.X, PositionAfterRotation.Y);
 
-    public void RotateXByAlpha(float alpha)
+    public void Rotate(Matrix3 rotationX, Matrix3 rotationZ)
     {
-        RotateByAlpha(alpha, Geometry.RotateXByAlpha);
-    }
-
-    public void RotateZByAlpha(float alpha) 
-    {
-        RotateByAlpha(alpha, Geometry.RotateZByAlpha);
-    }
-
-    private void RotateByAlpha(float alpha, Func<Vector3, float, Vector3> matrixTransformation)
-    {
-        PositionAfterRotation = matrixTransformation(Position, alpha);
-        TangentUAfterRotation = matrixTransformation(TangentU, alpha);
-        TangentVAfterRotation = matrixTransformation(TangentV, alpha);
-        Normal = matrixTransformation(Normal, alpha);
+        PositionAfterRotation = rotationX * (rotationZ * Position);
+        TangentUAfterRotation = rotationX * (rotationZ * TangentU);
+        TangentVAfterRotation = rotationX * (rotationZ * TangentV);
+        Normal = rotationX * (rotationZ * Normal);
     }
 }

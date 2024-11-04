@@ -4,7 +4,7 @@ namespace BezierSurface.Renderer.Model;
 
 public static class Algorithms
 {
-    public static List<Triangle> GenerateMesh(BezierSurface bezierSurface, int resolution)
+    public static (List<Triangle>, Vertex[,]) GenerateMesh(BezierSurface bezierSurface, int resolution)
     {
         var vertices = new Vertex[resolution, resolution];
 
@@ -20,13 +20,7 @@ public static class Algorithms
                 var tangentV = CalculateTangentV(u, v, bezierSurface);
                 var normal = Vector3.Cross(tangentU, tangentV);
 
-                vertices[i, j] = new Vertex()
-                {
-                    Position = point,
-                    TangentU = tangentU,
-                    TangentV = tangentV,
-                    Normal = normal
-                };
+                vertices[i, j] = new Vertex(point, tangentU, tangentV, normal);
             }
         }
 
@@ -46,7 +40,7 @@ public static class Algorithms
             }
         }
 
-        return triangles;
+        return (triangles, vertices);
     }
     private static Vector3 CalculateTangentV(float u, float v, BezierSurface bezierSurface)
     {
@@ -110,7 +104,6 @@ public static class Algorithms
             return Binomial.Coefficient(n, i) * (float)Math.Pow(t, i) * (float)Math.Pow(1 - t, n - i);
         }
     }
-
     public static class Binomial
     {
         private static int[][] _coefficients = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1]];

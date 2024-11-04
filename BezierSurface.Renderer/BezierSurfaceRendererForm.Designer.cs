@@ -76,6 +76,7 @@ partial class BezierSurfaceRendererForm
         ResolutionTrackBarValueLabel = new Label();
         AlphaAngleTrackBarValueLabel = new Label();
         BetaAngleTrackBarValueLabel = new Label();
+        ShowControlPointsCheckBox = new CheckBox();
         TableLayoutPanel.SuspendLayout();
         MainMenu.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)PictureBox).BeginInit();
@@ -465,6 +466,7 @@ partial class BezierSurfaceRendererForm
         // 
         LightSourceDistanceTrackBar.Dock = DockStyle.Fill;
         LightSourceDistanceTrackBar.Location = new Point(182, 35);
+        LightSourceDistanceTrackBar.Maximum = 100;
         LightSourceDistanceTrackBar.Name = "LightSourceDistanceTrackBar";
         LightSourceDistanceTrackBar.Size = new Size(218, 26);
         LightSourceDistanceTrackBar.TabIndex = 3;
@@ -516,6 +518,7 @@ partial class BezierSurfaceRendererForm
         tableLayoutPanel1.Controls.Add(ResolutionTrackBarValueLabel, 2, 1);
         tableLayoutPanel1.Controls.Add(AlphaAngleTrackBarValueLabel, 2, 2);
         tableLayoutPanel1.Controls.Add(BetaAngleTrackBarValueLabel, 2, 3);
+        tableLayoutPanel1.Controls.Add(ShowControlPointsCheckBox, 1, 0);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(3, 23);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -530,6 +533,8 @@ partial class BezierSurfaceRendererForm
         // ShowGridCheckBox
         // 
         ShowGridCheckBox.AutoSize = true;
+        ShowGridCheckBox.Checked = true;
+        ShowGridCheckBox.CheckState = CheckState.Checked;
         ShowGridCheckBox.Dock = DockStyle.Fill;
         ShowGridCheckBox.Location = new Point(3, 3);
         ShowGridCheckBox.Name = "ShowGridCheckBox";
@@ -537,6 +542,7 @@ partial class BezierSurfaceRendererForm
         ShowGridCheckBox.TabIndex = 0;
         ShowGridCheckBox.Text = "Show grid";
         ShowGridCheckBox.UseVisualStyleBackColor = true;
+        ShowGridCheckBox.CheckedChanged += ShowGridCheckBox_CheckedChanged;
         // 
         // ResolutionLabel
         // 
@@ -572,6 +578,7 @@ partial class BezierSurfaceRendererForm
         // 
         ResolutionTrackBar.Dock = DockStyle.Fill;
         ResolutionTrackBar.Location = new Point(182, 35);
+        ResolutionTrackBar.Maximum = 100;
         ResolutionTrackBar.Name = "ResolutionTrackBar";
         ResolutionTrackBar.Size = new Size(218, 26);
         ResolutionTrackBar.TabIndex = 4;
@@ -581,8 +588,8 @@ partial class BezierSurfaceRendererForm
         // 
         AlphaAngleTrackBar.Dock = DockStyle.Fill;
         AlphaAngleTrackBar.Location = new Point(182, 67);
-        AlphaAngleTrackBar.Maximum = 45;
-        AlphaAngleTrackBar.Minimum = -45;
+        AlphaAngleTrackBar.Maximum = 180;
+        AlphaAngleTrackBar.Minimum = -180;
         AlphaAngleTrackBar.Name = "AlphaAngleTrackBar";
         AlphaAngleTrackBar.Size = new Size(218, 26);
         AlphaAngleTrackBar.TabIndex = 5;
@@ -592,6 +599,8 @@ partial class BezierSurfaceRendererForm
         // 
         BetaAngleTrackBar.Dock = DockStyle.Fill;
         BetaAngleTrackBar.Location = new Point(182, 99);
+        BetaAngleTrackBar.Maximum = 180;
+        BetaAngleTrackBar.Minimum = -180;
         BetaAngleTrackBar.Name = "BetaAngleTrackBar";
         BetaAngleTrackBar.Size = new Size(218, 26);
         BetaAngleTrackBar.TabIndex = 6;
@@ -626,6 +635,20 @@ partial class BezierSurfaceRendererForm
         BetaAngleTrackBarValueLabel.Size = new Size(39, 32);
         BetaAngleTrackBarValueLabel.TabIndex = 9;
         BetaAngleTrackBarValueLabel.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // ShowControlPointsCheckBox
+        // 
+        ShowControlPointsCheckBox.AutoSize = true;
+        ShowControlPointsCheckBox.Checked = true;
+        ShowControlPointsCheckBox.CheckState = CheckState.Checked;
+        ShowControlPointsCheckBox.Dock = DockStyle.Fill;
+        ShowControlPointsCheckBox.Location = new Point(182, 3);
+        ShowControlPointsCheckBox.Name = "ShowControlPointsCheckBox";
+        ShowControlPointsCheckBox.Size = new Size(218, 26);
+        ShowControlPointsCheckBox.TabIndex = 10;
+        ShowControlPointsCheckBox.Text = "Show control points";
+        ShowControlPointsCheckBox.UseVisualStyleBackColor = true;
+        ShowControlPointsCheckBox.CheckedChanged += ShowControlPointsCheckBox_CheckedChanged;
         // 
         // BezierSurfaceRendererForm
         // 
@@ -716,4 +739,5 @@ partial class BezierSurfaceRendererForm
     private TableLayoutPanel tableLayoutPanel4;
     private CheckBox EnableNormalMapCheckBox;
     private Button SelectNormalMapButton;
+    private CheckBox ShowControlPointsCheckBox;
 }
