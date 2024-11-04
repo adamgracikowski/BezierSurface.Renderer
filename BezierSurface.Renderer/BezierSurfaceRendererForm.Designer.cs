@@ -441,6 +441,7 @@ partial class BezierSurfaceRendererForm
         LightSourceAnimationCheckBox.TabIndex = 0;
         LightSourceAnimationCheckBox.Text = "Animation";
         LightSourceAnimationCheckBox.UseVisualStyleBackColor = true;
+        LightSourceAnimationCheckBox.CheckedChanged += LightSourceAnimationCheckBox_CheckedChanged;
         // 
         // LightSourceDistanceLabel
         // 

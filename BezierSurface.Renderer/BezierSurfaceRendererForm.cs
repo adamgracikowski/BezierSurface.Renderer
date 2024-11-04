@@ -7,6 +7,7 @@ namespace BezierSurface.Renderer;
 public partial class BezierSurfaceRendererForm : Form
 {
     public RendererManager RendererManager { get; set; }
+    public System.Windows.Forms.Timer? Timer { get; set; }
 
     public BezierSurfaceRendererForm()
     {
@@ -15,13 +16,32 @@ public partial class BezierSurfaceRendererForm : Form
         var lambertModel = InitializeLambertModel();
         var bezierSurface = LoadDefaultBezierSurface();
         var bezierSurfaceMesh = new BezierSurfaceMesh(bezierSurface, BezierSurfaceMeshConstants.DefaultResolution);
-        
+
         ResolutionTrackBar.Value = BezierSurfaceMeshConstants.DefaultResolution;
 
         InitializeTrackBarLabels();
 
         RendererManager = new(bezierSurfaceMesh, lambertModel, PictureBox);
         RendererManager.Render();
+
+        InitializeTimer();
+    }
+
+    private void InitializeTimer()
+    {
+        Timer = new()
+        {
+            Interval = 100
+        };
+
+        var direction = 1;
+
+        Timer.Tick += (s, e) =>
+        {
+            RendererManager.LambertModel.LightPosition = Animation.NewLightPosition(RendererManager.LambertModel.LightPosition.Z);
+            RendererManager.Render();
+            this.Text = RendererManager.LambertModel.LightPosition.ToString();
+        };
     }
 
     private void LightSourceColorButton_Click(object sender, EventArgs e)
@@ -86,6 +106,7 @@ public partial class BezierSurfaceRendererForm : Form
     private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
     {
         RendererManager.Dispose();
+        Timer?.Dispose();
         DrawingStyles.Dispose();
         Application.Exit();
     }
@@ -263,5 +284,17 @@ public partial class BezierSurfaceRendererForm : Form
     {
         RendererManager.ShowControlPoints = !RendererManager.ShowControlPoints;
         RendererManager.Render();
+    }
+
+    private void LightSourceAnimationCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (LightSourceAnimationCheckBox.Checked)
+        {
+            Timer?.Start();
+        }
+        else
+        {
+            Timer?.Stop();
+        }
     }
 }
