@@ -6,6 +6,7 @@ public sealed class RendererManager : IDisposable
 {
     public BezierSurfaceMesh BezierSurfaceMesh { get; set; }
     public LambertModel LambertModel { get; set; }
+    public Texture Texture { get; set; }
 
     private float _alpha;
     private float _beta;
@@ -13,6 +14,7 @@ public sealed class RendererManager : IDisposable
     public bool ShowControlPoints { get; set; } = true;
     public bool ShowGrid { get; set; } = true;
     public bool ShowSurface { get; set; } = true;
+    public bool UseTexture { get; set; } = true;
     public bool ShouldDrawNormalMap { get; set; }
 
     public float Alpha
@@ -56,10 +58,11 @@ public sealed class RendererManager : IDisposable
     public Bitmap? NormalMap { get; set; }
     public PictureBox PictureBox { get; set; }
 
-    public RendererManager(BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel, PictureBox pictureBox)
+    public RendererManager(BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel, Texture textureManager, PictureBox pictureBox)
     {
         BezierSurfaceMesh = bezierSurfaceMesh;
         LambertModel = lambertModel;
+        Texture = textureManager;
         PictureBox = pictureBox;
 
         var width = PictureBox.ClientRectangle.Width;
@@ -91,7 +94,7 @@ public sealed class RendererManager : IDisposable
 
         if (ShowSurface)
         {
-            graphics.DrawBezierSurface(BezierSurfaceMesh, LambertModel);
+            graphics.DrawBezierSurface(BezierSurfaceMesh, LambertModel, UseTexture ? Texture : null);
         }
 
         if (ShowControlPoints)
@@ -116,6 +119,7 @@ public sealed class RendererManager : IDisposable
     {
         Buffer.Dispose();
         NormalMap?.Dispose();
+        Texture?.Dispose();
         PictureBox.Image?.Dispose();
     }
     private void ClearBuffer()

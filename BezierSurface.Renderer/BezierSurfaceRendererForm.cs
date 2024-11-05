@@ -14,6 +14,7 @@ public partial class BezierSurfaceRendererForm : Form
         InitializeComponent();
 
         var lambertModel = InitializeLambertModel();
+        var textureManager = InitializeTextureManager();
         var bezierSurface = LoadDefaultBezierSurface();
         var bezierSurfaceMesh = new BezierSurfaceMesh(bezierSurface, BezierSurfaceMeshConstants.DefaultResolution);
 
@@ -21,10 +22,20 @@ public partial class BezierSurfaceRendererForm : Form
 
         InitializeTrackBarLabels();
 
-        RendererManager = new(bezierSurfaceMesh, lambertModel, PictureBox);
+        RendererManager = new(bezierSurfaceMesh, lambertModel, textureManager, PictureBox);
         RendererManager.Render();
 
         InitializeTimer();
+    }
+
+    private Texture InitializeTextureManager()
+    {
+        var texturesDirectory = Path.Combine(Application.StartupPath, "Textures");
+        var defaultTexture = Path.Combine(texturesDirectory, "default.jpg");
+
+        var bitmap = new Bitmap(defaultTexture);
+
+        return new Texture(bitmap);
     }
 
     private void InitializeTimer()
@@ -250,7 +261,7 @@ public partial class BezierSurfaceRendererForm : Form
         using var openFileDialog = new OpenFileDialog()
         {
             Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
-            Title = "Select a Normal Map",
+            Title = "Select Normal Map",
             InitialDirectory = initialDirectory
         };
 
@@ -299,6 +310,56 @@ public partial class BezierSurfaceRendererForm : Form
     private void ShowSurfaceCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         RendererManager.ShowSurface = !RendererManager.ShowSurface;
+        RendererManager.Render();
+    }
+
+    private void SelectTextureButton_Click(object sender, EventArgs e)
+    {
+        var initialDirectory = Path.Combine(Application.StartupPath, "Textures");
+
+        if (!Directory.Exists(initialDirectory))
+        {
+            MessageBox.Show(
+                "Directory with default Textures doesn't exist.",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+
+            return;
+        }
+
+        using var openFileDialog = new OpenFileDialog()
+        {
+            Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+            Title = "Select Texture",
+            InitialDirectory = initialDirectory
+        };
+
+        if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+        try
+        {
+            var texture = new Bitmap(openFileDialog.FileName);
+            RendererManager.Texture.SetTexture(texture);
+            RendererManager.Render();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"Failed to load the texture: {ex.Message}",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+
+            return;
+        }
+    }
+
+    private void EnableTextureCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        RendererManager.UseTexture = !RendererManager.UseTexture;
         RendererManager.Render();
     }
 }

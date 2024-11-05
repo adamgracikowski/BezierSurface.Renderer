@@ -93,6 +93,17 @@ public static class Algorithms
         return vector;
     }
 
+    public class InterpolationResult
+    {
+        public bool Success { get; set; }
+        public float U { get; set; }
+        public float V { get; set; }
+        public Vector3 Position { get; set; }
+        public Vector3 TangentU { get; set; }
+        public Vector3 TangentV { get; set; }
+        public Vector3 Normal { get; set; }
+    }
+
     public static (float u, float v, float w) CalculateBarycentric(Vector2 p, Vector3 a3, Vector3 b3, Vector3 c3)
     {
         var a = new Vector2(a3.X, a3.Y);
@@ -122,38 +133,73 @@ public static class Algorithms
 
         return (u, v, w);
     }
-
-    public static (Vector3 n, Vector3 p) InterpolateBarycentric(Vector2 p, Vector3 a, Vector3 b, Vector3 c, Vector3 n1, Vector3 n2, Vector3 n3)
+    public static InterpolationResult InterpolateBarycentric(Vector2 p, Triangle triangle)
     {
-        var (u, v, w) = CalculateBarycentric(p, a, b, c);
+        var result = new InterpolationResult();
+
+        var (u, v, w) = CalculateBarycentric(p,
+            triangle.Vertex1.PositionAfterRotation,
+            triangle.Vertex2.PositionAfterRotation,
+            triangle.Vertex3.PositionAfterRotation
+        );
 
         if (float.IsNaN(u))
         {
-            return (Vector3.Zero, new Vector3(float.NaN, float.NaN, float.NaN));
+            result.Success = false;
+            return result;
         }
 
-        var n = u * n1 + v * n2 + w * n3;
-        var x = u * a.X + v * b.X + w * c.X;
-        var y = u * a.Y + v * b.Y + w * c.Y;
-        var z = u * a.Z + v * b.Z + w * c.Z;
+        result.Normal = u * triangle.Vertex1.NormalAfterRotation +
+            v * triangle.Vertex2.NormalAfterRotation +
+            w * triangle.Vertex3.NormalAfterRotation;
 
-        return (Vector3.Normalize(n), new Vector3(x, y, z));
+        result.TangentU = u * triangle.Vertex1.TangentUAfterRotation +
+            v * triangle.Vertex2.TangentUAfterRotation +
+            w * triangle.Vertex3.TangentUAfterRotation;
+
+        result.TangentV = u * triangle.Vertex1.TangentVAfterRotation +
+            v * triangle.Vertex2.TangentVAfterRotation +
+            w * triangle.Vertex3.TangentVAfterRotation;
+
+        result.U = u * triangle.Vertex1.U +
+            v * triangle.Vertex2.U +
+            w * triangle.Vertex3.U;
+
+        result.V = u * triangle.Vertex1.V +
+            v * triangle.Vertex2.V +
+            w * triangle.Vertex3.V;
+
+
+        var x = u * triangle.Vertex1.Position.X + 
+            v * triangle.Vertex2.Position.X + 
+            w * triangle.Vertex3.Position.X;
+        var y = u * triangle.Vertex1.Position.Y + 
+            v * triangle.Vertex2.Position.Y + 
+            w * triangle.Vertex3.Position.Y;
+        var z = u * triangle.Vertex1.Position.Z + 
+            v * triangle.Vertex2.Position.Z + 
+            w * triangle.Vertex3.Position.Z;
+
+        result.Position = new(x, y, z);
+        result.Success = true;
+
+        return result;
     }
 
-    private static Vector3 GetNormalFromTexture(Bitmap normalMap, int index)
-    {
-        int x = index % normalMap.Width; // Oblicza współrzędną x
-        int y = index / normalMap.Width; // Oblicza współrzędną y
+    //private static Vector3 GetNormalFromTexture(Bitmap normalMap, int index)
+    //{
+    //    int x = index % normalMap.Width; // Oblicza współrzędną x
+    //    int y = index / normalMap.Width; // Oblicza współrzędną y
 
-        Color color = normalMap.GetPixel(x, y); // Odczytuje kolor z tekstury
+    //    Color color = normalMap.GetPixel(x, y); // Odczytuje kolor z tekstury
 
-        // Przekształca kolor RGB do wektora normalnego
-        float nx = (color.R / 255f) * 2 - 1; // Ustala składową x (-1 do 1)
-        float ny = (color.G / 255f) * 2 - 1; // Ustala składową y (-1 do 1)
-        float nz = (color.B / 255f) / 255f; // Ustala składową z (0 do 1)
+    //    // Przekształca kolor RGB do wektora normalnego
+    //    float nx = (color.R / 255f) * 2 - 1; // Ustala składową x (-1 do 1)
+    //    float ny = (color.G / 255f) * 2 - 1; // Ustala składową y (-1 do 1)
+    //    float nz = (color.B / 255f) / 255f; // Ustala składową z (0 do 1)
 
-        return new Vector3(nx, ny, nz); // Zwraca wektor normalny
-    }
+    //    return new Vector3(nx, ny, nz); // Zwraca wektor normalny
+    //}
 
     public static class Bernstein
     {
@@ -196,7 +242,7 @@ public class PolygonFiller
         }
     }
 
-    public void FillPolygon(Graphics g, Vertex[] vertices)
+    public void FillPolygon(Graphics g, Vertex[] vertices, Triangle triangle, Texture? texture = null)
     {
         var minY = vertices.Min(v => (int)v.PositionAfterRotation.Y);
         var maxY = vertices.Max(v => (int)v.PositionAfterRotation.Y);
@@ -220,7 +266,7 @@ public class PolygonFiller
 
             if (start.PositionAfterRotation.Y != end.PositionAfterRotation.Y)
             {
-                var inverseSlope = (float)(end.PositionAfterRotation.X - start.PositionAfterRotation.X) / 
+                var inverseSlope = (float)(end.PositionAfterRotation.X - start.PositionAfterRotation.X) /
                     (end.PositionAfterRotation.Y - start.PositionAfterRotation.Y);
                 edgeTable[(int)start.PositionAfterRotation.Y - minY].Add(new Edge((int)end.PositionAfterRotation.Y, start.PositionAfterRotation.X, inverseSlope));
             }
@@ -241,21 +287,15 @@ public class PolygonFiller
 
                 for (var x = xStart; x <= xEnd; x++)
                 {
-                    var (n, p) = Algorithms.InterpolateBarycentric(
-                        new Vector2(x, y),
-                        vertices[0].PositionAfterRotation,
-                        vertices[1].PositionAfterRotation,
-                        vertices[2].PositionAfterRotation,
-                        vertices[0].NormalAfterRotation,
-                        vertices[1].NormalAfterRotation,
-                        vertices[2].NormalAfterRotation
-                    );
+                    var interpolationResult = Algorithms.InterpolateBarycentric(new Vector2(x, y), triangle);
 
-                    if (float.IsNaN(p.Z))
+                    if (!interpolationResult.Success)
                         continue;
 
-                    var color = LambertModel.CalculateColor(n, p);
-                    
+                    var objectColor = texture?.GetColor(interpolationResult.U, interpolationResult.V);
+
+                    var color = LambertModel.CalculateColor(interpolationResult.Normal, interpolationResult.Position, objectColor);
+
                     using var brush = new SolidBrush(color);
                     g.FillRectangle(brush, x, y, 1, 1);
                 }

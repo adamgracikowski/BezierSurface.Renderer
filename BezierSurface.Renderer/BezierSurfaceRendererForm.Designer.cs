@@ -41,6 +41,8 @@ partial class BezierSurfaceRendererForm
         panel1 = new Panel();
         NormalMapGroupBox = new GroupBox();
         tableLayoutPanel4 = new TableLayoutPanel();
+        SelectTextureButton = new Button();
+        EnableTextureCheckBox = new CheckBox();
         EnableNormalMapCheckBox = new CheckBox();
         SelectNormalMapButton = new Button();
         ReflectionPropertiesGroupBox = new GroupBox();
@@ -212,6 +214,8 @@ partial class BezierSurfaceRendererForm
         tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
         tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+        tableLayoutPanel4.Controls.Add(SelectTextureButton, 1, 1);
+        tableLayoutPanel4.Controls.Add(EnableTextureCheckBox, 0, 1);
         tableLayoutPanel4.Controls.Add(EnableNormalMapCheckBox, 0, 0);
         tableLayoutPanel4.Controls.Add(SelectNormalMapButton, 1, 0);
         tableLayoutPanel4.Dock = DockStyle.Fill;
@@ -225,6 +229,30 @@ partial class BezierSurfaceRendererForm
         tableLayoutPanel4.Size = new Size(448, 128);
         tableLayoutPanel4.TabIndex = 0;
         // 
+        // SelectTextureButton
+        // 
+        SelectTextureButton.Location = new Point(182, 35);
+        SelectTextureButton.Name = "SelectTextureButton";
+        SelectTextureButton.Size = new Size(94, 26);
+        SelectTextureButton.TabIndex = 16;
+        SelectTextureButton.Text = "Select texture";
+        SelectTextureButton.UseVisualStyleBackColor = true;
+        SelectTextureButton.Click += SelectTextureButton_Click;
+        // 
+        // EnableTextureCheckBox
+        // 
+        EnableTextureCheckBox.AutoSize = true;
+        EnableTextureCheckBox.Checked = true;
+        EnableTextureCheckBox.CheckState = CheckState.Checked;
+        EnableTextureCheckBox.Dock = DockStyle.Fill;
+        EnableTextureCheckBox.Location = new Point(3, 35);
+        EnableTextureCheckBox.Name = "EnableTextureCheckBox";
+        EnableTextureCheckBox.Size = new Size(173, 26);
+        EnableTextureCheckBox.TabIndex = 15;
+        EnableTextureCheckBox.Text = "Enable texture";
+        EnableTextureCheckBox.UseVisualStyleBackColor = true;
+        EnableTextureCheckBox.CheckedChanged += EnableTextureCheckBox_CheckedChanged;
+        // 
         // EnableNormalMapCheckBox
         // 
         EnableNormalMapCheckBox.AutoSize = true;
@@ -233,7 +261,7 @@ partial class BezierSurfaceRendererForm
         EnableNormalMapCheckBox.Name = "EnableNormalMapCheckBox";
         EnableNormalMapCheckBox.Size = new Size(173, 26);
         EnableNormalMapCheckBox.TabIndex = 13;
-        EnableNormalMapCheckBox.Text = "Enable";
+        EnableNormalMapCheckBox.Text = "Enable normal map";
         EnableNormalMapCheckBox.UseVisualStyleBackColor = true;
         EnableNormalMapCheckBox.CheckedChanged += EnableNormalMapCheckBox_CheckedChanged;
         // 
@@ -760,4 +788,6 @@ partial class BezierSurfaceRendererForm
     private Button SelectNormalMapButton;
     private CheckBox ShowControlPointsCheckBox;
     private CheckBox ShowSurfaceCheckBox;
+    private Button SelectTextureButton;
+    private CheckBox EnableTextureCheckBox;
 }

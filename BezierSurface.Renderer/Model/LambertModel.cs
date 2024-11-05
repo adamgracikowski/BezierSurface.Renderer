@@ -47,7 +47,7 @@ public class LambertModel
     public float SpecularCoefficient { get; set; }
     public int ShininessExponent { get; set; }
 
-    public Color CalculateColor(Vector3 n, Vector3 point)
+    public Color CalculateColor(Vector3 n, Vector3 point, Vector3? objectColor = null)
     {
         n = Vector3.Normalize(n);
 
@@ -61,7 +61,7 @@ public class LambertModel
         cosBeta = cosBeta > 0 ? (float)Math.Pow(cosBeta, ShininessExponent) : 0;
 
         var lightColorVector = Color2Vector3(LightColor);
-        var objectColorVector = Color2Vector3(ObjectColor);
+        var objectColorVector = objectColor ?? Color2Vector3(ObjectColor);
 
         var rgb = DiffuseCoefficient * lightColorVector * objectColorVector * cosAlpha +
             SpecularCoefficient * lightColorVector * objectColorVector * cosBeta;
