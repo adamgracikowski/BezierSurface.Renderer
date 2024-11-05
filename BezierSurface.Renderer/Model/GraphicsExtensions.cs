@@ -13,12 +13,12 @@ public static class GraphicsExtensions
         }
     }
 
-    public static void DrawBezierSurface(this Graphics graphics, BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel, Texture? texture = null)
+    public static void DrawBezierSurface(this Graphics graphics, BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel, Texture? texture = null, NormalMap? normalMap = null)
     {
         var pollygonFiller = new PolygonFiller(lambertModel);
         foreach (var triangle in bezierSurfaceMesh.Triangles)
         {
-            pollygonFiller.FillPolygon(graphics, triangle.Vertices, triangle, texture);
+            pollygonFiller.FillPolygon(graphics, triangle.Vertices, triangle, texture, normalMap);
         }
     }
 

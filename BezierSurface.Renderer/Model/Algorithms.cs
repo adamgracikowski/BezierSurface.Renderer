@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
+using System.Windows.Forms.VisualStyles;
 
 namespace BezierSurface.Renderer.Model;
 
@@ -170,14 +172,14 @@ public static class Algorithms
             w * triangle.Vertex3.V;
 
 
-        var x = u * triangle.Vertex1.Position.X + 
-            v * triangle.Vertex2.Position.X + 
+        var x = u * triangle.Vertex1.Position.X +
+            v * triangle.Vertex2.Position.X +
             w * triangle.Vertex3.Position.X;
-        var y = u * triangle.Vertex1.Position.Y + 
-            v * triangle.Vertex2.Position.Y + 
+        var y = u * triangle.Vertex1.Position.Y +
+            v * triangle.Vertex2.Position.Y +
             w * triangle.Vertex3.Position.Y;
-        var z = u * triangle.Vertex1.Position.Z + 
-            v * triangle.Vertex2.Position.Z + 
+        var z = u * triangle.Vertex1.Position.Z +
+            v * triangle.Vertex2.Position.Z +
             w * triangle.Vertex3.Position.Z;
 
         result.Position = new(x, y, z);
@@ -242,7 +244,7 @@ public class PolygonFiller
         }
     }
 
-    public void FillPolygon(Graphics g, Vertex[] vertices, Triangle triangle, Texture? texture = null)
+    public void FillPolygon(Graphics g, Vertex[] vertices, Triangle triangle, Texture? texture = null, NormalMap? normalMap = null)
     {
         var minY = vertices.Min(v => (int)v.PositionAfterRotation.Y);
         var maxY = vertices.Max(v => (int)v.PositionAfterRotation.Y);
@@ -293,6 +295,21 @@ public class PolygonFiller
                         continue;
 
                     var objectColor = texture?.GetColor(interpolationResult.U, interpolationResult.V);
+
+                    if (normalMap != null)
+                    {
+                        var rotationMatrix = new Matrix3(
+                            interpolationResult.TangentU,
+                            interpolationResult.TangentV,
+                            interpolationResult.Normal
+                        );
+
+                        interpolationResult.Normal = normalMap.GetNormalVector(
+                            interpolationResult.U,
+                            interpolationResult.V,
+                            rotationMatrix
+                        );
+                    }
 
                     var color = LambertModel.CalculateColor(interpolationResult.Normal, interpolationResult.Position, objectColor);
 

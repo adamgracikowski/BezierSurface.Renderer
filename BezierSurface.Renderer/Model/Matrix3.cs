@@ -3,6 +3,8 @@
 namespace BezierSurface.Renderer.Model;
 public sealed class Matrix3
 {
+    public const int Dimension = 3;
+
     private float[,] _elements;
 
     public Matrix3(float[,] elements)
@@ -12,11 +14,11 @@ public sealed class Matrix3
 
     public Matrix3(Vector3 firstColumn, Vector3 secondColumn, Vector3 thirdColumn)
     {
-        _elements = new float[,]
+        _elements = new float[Dimension, Dimension]
         {
             { firstColumn[0], secondColumn[0], thirdColumn[0] },
             { firstColumn[1], secondColumn[1], thirdColumn[1] },
-            { firstColumn[2], thirdColumn[2], firstColumn[3] }
+            { firstColumn[2], secondColumn[2], thirdColumn[2] }
         };
     }
 

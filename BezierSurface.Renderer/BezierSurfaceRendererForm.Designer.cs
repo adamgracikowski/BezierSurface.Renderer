@@ -256,6 +256,8 @@ partial class BezierSurfaceRendererForm
         // EnableNormalMapCheckBox
         // 
         EnableNormalMapCheckBox.AutoSize = true;
+        EnableNormalMapCheckBox.Checked = true;
+        EnableNormalMapCheckBox.CheckState = CheckState.Checked;
         EnableNormalMapCheckBox.Dock = DockStyle.Fill;
         EnableNormalMapCheckBox.Location = new Point(3, 3);
         EnableNormalMapCheckBox.Name = "EnableNormalMapCheckBox";
@@ -267,7 +269,6 @@ partial class BezierSurfaceRendererForm
         // 
         // SelectNormalMapButton
         // 
-        SelectNormalMapButton.Enabled = false;
         SelectNormalMapButton.Location = new Point(182, 3);
         SelectNormalMapButton.Name = "SelectNormalMapButton";
         SelectNormalMapButton.Size = new Size(94, 26);

@@ -14,7 +14,8 @@ public partial class BezierSurfaceRendererForm : Form
         InitializeComponent();
 
         var lambertModel = InitializeLambertModel();
-        var textureManager = InitializeTextureManager();
+        var texture = InitializeTexture();
+        var normalMap = InitializeNormalMap();
         var bezierSurface = LoadDefaultBezierSurface();
         var bezierSurfaceMesh = new BezierSurfaceMesh(bezierSurface, BezierSurfaceMeshConstants.DefaultResolution);
 
@@ -22,20 +23,30 @@ public partial class BezierSurfaceRendererForm : Form
 
         InitializeTrackBarLabels();
 
-        RendererManager = new(bezierSurfaceMesh, lambertModel, textureManager, PictureBox);
+        RendererManager = new(bezierSurfaceMesh, lambertModel, texture, normalMap, PictureBox);
         RendererManager.Render();
 
         InitializeTimer();
     }
 
-    private Texture InitializeTextureManager()
+    private NormalMap InitializeNormalMap()
+    {
+        var imagesDirectory = Path.Combine(Application.StartupPath, "Images");
+        var defaultNormalMap = Path.Combine(imagesDirectory, "sofa.png");
+
+        var bitmap = new Bitmap(defaultNormalMap);
+
+        return new NormalMap(true, bitmap);
+    }
+
+    private Texture InitializeTexture()
     {
         var texturesDirectory = Path.Combine(Application.StartupPath, "Textures");
-        var defaultTexture = Path.Combine(texturesDirectory, "default.jpg");
+        var defaultTexture = Path.Combine(texturesDirectory, "ink.jpg");
 
         var bitmap = new Bitmap(defaultTexture);
 
-        return new Texture(bitmap);
+        return new Texture(true, bitmap);
     }
 
     private void InitializeTimer()
@@ -240,7 +251,8 @@ public partial class BezierSurfaceRendererForm : Form
     private void EnableNormalMapCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         SelectNormalMapButton.Enabled = !SelectNormalMapButton.Enabled;
-        RendererManager.ShouldDrawNormalMap = SelectNormalMapButton.Enabled;
+        RendererManager.NormalMap.InUse = !RendererManager.NormalMap.InUse;
+        RendererManager.Render();
     }
     private void SelectNormalMapButton_Click(object sender, EventArgs e)
     {
@@ -267,24 +279,23 @@ public partial class BezierSurfaceRendererForm : Form
 
         if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
-        try
-        {
+        //try
+        //{
             var normalMap = new Bitmap(openFileDialog.FileName);
-            RendererManager.NormalMap?.Dispose();
-            RendererManager.NormalMap = normalMap;
+            RendererManager.NormalMap.SetNormalMap(normalMap);
             RendererManager.Render();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(
-                $"Failed to load the normal map: {ex.Message}",
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
+        //}
+        //catch (Exception ex)
+        //{
+        //    MessageBox.Show(
+        //        $"Failed to load the normal map: {ex.Message}",
+        //        "Error",
+        //        MessageBoxButtons.OK,
+        //        MessageBoxIcon.Error
+        //    );
 
-            return;
-        }
+        //    return;
+        //}
     }
     private void ShowGridCheckBox_CheckedChanged(object sender, EventArgs e)
     {
@@ -312,7 +323,6 @@ public partial class BezierSurfaceRendererForm : Form
         RendererManager.ShowSurface = !RendererManager.ShowSurface;
         RendererManager.Render();
     }
-
     private void SelectTextureButton_Click(object sender, EventArgs e)
     {
         var initialDirectory = Path.Combine(Application.StartupPath, "Textures");
@@ -356,10 +366,9 @@ public partial class BezierSurfaceRendererForm : Form
             return;
         }
     }
-
     private void EnableTextureCheckBox_CheckedChanged(object sender, EventArgs e)
     {
-        RendererManager.UseTexture = !RendererManager.UseTexture;
+        RendererManager.Texture.InUse = !RendererManager.Texture.InUse;
         RendererManager.Render();
     }
 }

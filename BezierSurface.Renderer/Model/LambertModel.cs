@@ -49,7 +49,8 @@ public class LambertModel
 
     public Color CalculateColor(Vector3 n, Vector3 point, Vector3? objectColor = null)
     {
-        n = Vector3.Normalize(n);
+        if(n != Vector3.Zero)
+            n = Vector3.Normalize(n);
 
         var l = Vector3.Normalize(LightPosition - point);
         var r = Vector3.Normalize(2 * Vector3.Dot(n, l) * n - l);
@@ -66,9 +67,9 @@ public class LambertModel
         var rgb = DiffuseCoefficient * lightColorVector * objectColorVector * cosAlpha +
             SpecularCoefficient * lightColorVector * objectColorVector * cosBeta;
 
-        rgb.X = Math.Min(1, rgb.X);
-        rgb.Y = Math.Min(1, rgb.Y);
-        rgb.Z = Math.Min(1, rgb.Z);
+        rgb.X = Math.Clamp(rgb.X, 0, 1);
+        rgb.Y = Math.Clamp(rgb.Y, 0, 1);
+        rgb.Z = Math.Clamp(rgb.Z, 0, 1);
 
         rgb *= byte.MaxValue;
 
