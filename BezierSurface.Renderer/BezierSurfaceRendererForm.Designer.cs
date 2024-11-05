@@ -58,6 +58,7 @@ partial class BezierSurfaceRendererForm
         DiffuseCoefficientTrackBarValueLabel = new Label();
         LightSourceGroupBox = new GroupBox();
         tableLayoutPanel2 = new TableLayoutPanel();
+        ShowSurfaceCheckBox = new CheckBox();
         LightSourceAnimationCheckBox = new CheckBox();
         LightSourceDistanceLabel = new Label();
         LightSourceColorLabel = new Label();
@@ -77,7 +78,6 @@ partial class BezierSurfaceRendererForm
         AlphaAngleTrackBarValueLabel = new Label();
         BetaAngleTrackBarValueLabel = new Label();
         ShowControlPointsCheckBox = new CheckBox();
-        ShowSurfaceCheckBox = new CheckBox();
         TableLayoutPanel.SuspendLayout();
         MainMenu.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)PictureBox).BeginInit();
@@ -433,6 +433,20 @@ partial class BezierSurfaceRendererForm
         tableLayoutPanel2.Size = new Size(448, 128);
         tableLayoutPanel2.TabIndex = 0;
         // 
+        // ShowSurfaceCheckBox
+        // 
+        ShowSurfaceCheckBox.AutoSize = true;
+        ShowSurfaceCheckBox.Checked = true;
+        ShowSurfaceCheckBox.CheckState = CheckState.Checked;
+        ShowSurfaceCheckBox.Dock = DockStyle.Fill;
+        ShowSurfaceCheckBox.Location = new Point(182, 3);
+        ShowSurfaceCheckBox.Name = "ShowSurfaceCheckBox";
+        ShowSurfaceCheckBox.Size = new Size(218, 26);
+        ShowSurfaceCheckBox.TabIndex = 11;
+        ShowSurfaceCheckBox.Text = "Show surface";
+        ShowSurfaceCheckBox.UseVisualStyleBackColor = true;
+        ShowSurfaceCheckBox.CheckedChanged += ShowSurfaceCheckBox_CheckedChanged;
+        // 
         // LightSourceAnimationCheckBox
         // 
         LightSourceAnimationCheckBox.AutoSize = true;
@@ -470,9 +484,11 @@ partial class BezierSurfaceRendererForm
         LightSourceDistanceTrackBar.Dock = DockStyle.Fill;
         LightSourceDistanceTrackBar.Location = new Point(182, 35);
         LightSourceDistanceTrackBar.Maximum = 500;
+        LightSourceDistanceTrackBar.Minimum = 10;
         LightSourceDistanceTrackBar.Name = "LightSourceDistanceTrackBar";
         LightSourceDistanceTrackBar.Size = new Size(218, 26);
         LightSourceDistanceTrackBar.TabIndex = 3;
+        LightSourceDistanceTrackBar.Value = 10;
         LightSourceDistanceTrackBar.Scroll += LightSourceDistanceTrackBar_Scroll;
         // 
         // LightSourceColorButton
@@ -652,20 +668,6 @@ partial class BezierSurfaceRendererForm
         ShowControlPointsCheckBox.Text = "Show control points";
         ShowControlPointsCheckBox.UseVisualStyleBackColor = true;
         ShowControlPointsCheckBox.CheckedChanged += ShowControlPointsCheckBox_CheckedChanged;
-        // 
-        // ShowSurfaceCheckBox
-        // 
-        ShowSurfaceCheckBox.AutoSize = true;
-        ShowSurfaceCheckBox.Checked = true;
-        ShowSurfaceCheckBox.CheckState = CheckState.Checked;
-        ShowSurfaceCheckBox.Dock = DockStyle.Fill;
-        ShowSurfaceCheckBox.Location = new Point(182, 3);
-        ShowSurfaceCheckBox.Name = "ShowSurfaceCheckBox";
-        ShowSurfaceCheckBox.Size = new Size(218, 26);
-        ShowSurfaceCheckBox.TabIndex = 11;
-        ShowSurfaceCheckBox.Text = "Show surface";
-        ShowSurfaceCheckBox.UseVisualStyleBackColor = true;
-        ShowSurfaceCheckBox.CheckedChanged += ShowSurfaceCheckBox_CheckedChanged;
         // 
         // BezierSurfaceRendererForm
         // 

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace BezierSurface.Renderer.Model;
 
@@ -116,37 +115,48 @@ public static class Algorithms
 
         var denom = d00 * d11 - d01 * d01;
 
-
-        var v = (d11 * d20 - d01 * d21) / denom;
-        var w = (d00 * d21 - d01 * d20) / denom;
-        var u = 1.0f - v - w;
-
         if (Math.Abs(denom) < 1e-6f)
         {
             return (float.NaN, float.NaN, float.NaN);
         }
 
+        var v = (d11 * d20 - d01 * d21) / denom;
+        var w = (d00 * d21 - d01 * d20) / denom;
+        var u = 1.0f - v - w;
+
         return (u, v, w);
     }
 
-    public static (Vector3 n, float z) InterpolateBarycentric(Vector2 p, Vector3 a, Vector3 b, Vector3 c, Vector3 n1, Vector3 n2, Vector3 n3)
+    public static (Vector3 n, Vector3 p) InterpolateBarycentric(Vector2 p, Vector3 a, Vector3 b, Vector3 c, Vector3 n1, Vector3 n2, Vector3 n3)
     {
         var (u, v, w) = CalculateBarycentric(p, a, b, c);
 
         if (float.IsNaN(u))
         {
-            return (Vector3.Zero, float.NaN);
+            return (Vector3.Zero, new Vector3(float.NaN, float.NaN, float.NaN));
         }
 
         var n = u * n1 + v * n2 + w * n3;
+        var x = u * a.X + v * b.X + w * c.X;
+        var y = u * a.Y + v * b.Y + w * c.Y;
         var z = u * a.Z + v * b.Z + w * c.Z;
 
-        if (float.IsNaN(z))
-        {
-            Debugger.Break();
-        }
+        return (Vector3.Normalize(n), new Vector3(x, y, z));
+    }
 
-        return (Vector3.Normalize(n), z);
+    private static Vector3 GetNormalFromTexture(Bitmap normalMap, int index)
+    {
+        int x = index % normalMap.Width; // Oblicza współrzędną x
+        int y = index / normalMap.Width; // Oblicza współrzędną y
+
+        Color color = normalMap.GetPixel(x, y); // Odczytuje kolor z tekstury
+
+        // Przekształca kolor RGB do wektora normalnego
+        float nx = (color.R / 255f) * 2 - 1; // Ustala składową x (-1 do 1)
+        float ny = (color.G / 255f) * 2 - 1; // Ustala składową y (-1 do 1)
+        float nz = (color.B / 255f) / 255f; // Ustala składową z (0 do 1)
+
+        return new Vector3(nx, ny, nz); // Zwraca wektor normalny
     }
 
 
@@ -236,7 +246,7 @@ public class PolygonFiller
 
                 for (var x = xStart; x <= xEnd; x++)
                 {
-                    var (n, z) = Algorithms.InterpolateBarycentric(
+                    var (n, p) = Algorithms.InterpolateBarycentric(
                         new Vector2(x, y),
                         vertices[0].PositionAfterRotation,
                         vertices[1].PositionAfterRotation,
@@ -246,10 +256,10 @@ public class PolygonFiller
                         vertices[2].NormalAfterRotation
                     );
 
-                    if (float.IsNaN(z))
+                    if (float.IsNaN(p.Z))
                         continue;
 
-                    var color = LambertModel.CalculateColor(n, new Vector3(x, y, z));
+                    var color = LambertModel.CalculateColor(n, p);
                     
                     using var brush = new SolidBrush(color);
                     g.FillRectangle(brush, x, y, 1, 1);

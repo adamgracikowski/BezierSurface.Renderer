@@ -13,6 +13,7 @@ public sealed class RendererManager : IDisposable
     public bool ShowControlPoints { get; set; } = true;
     public bool ShowGrid { get; set; } = true;
     public bool ShowSurface { get; set; } = true;
+    public bool ShouldDrawNormalMap { get; set; }
 
     public float Alpha
     {
@@ -52,6 +53,7 @@ public sealed class RendererManager : IDisposable
     }
 
     public Bitmap Buffer { get; set; }
+    public Bitmap? NormalMap { get; set; }
     public PictureBox PictureBox { get; set; }
 
     public RendererManager(BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel, PictureBox pictureBox)
@@ -113,6 +115,7 @@ public sealed class RendererManager : IDisposable
     public void Dispose()
     {
         Buffer.Dispose();
+        NormalMap?.Dispose();
         PictureBox.Image?.Dispose();
     }
     private void ClearBuffer()

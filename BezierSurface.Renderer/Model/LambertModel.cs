@@ -4,7 +4,7 @@ namespace BezierSurface.Renderer.Model;
 
 public static class LambertModelConstants
 {
-    public static readonly Color DefaultLightColor = Color.Yellow;
+    public static readonly Color DefaultLightColor = Color.White;
     public static readonly Color DefaultObjectColor = Color.Green;
     public static readonly Vector3 DefaultLightPosition = 300 * Vector3.UnitZ;
     public static readonly float DefaultDiffuseCoefficient = 0.5f;
@@ -60,19 +60,23 @@ public class LambertModel
 
         cosBeta = cosBeta > 0 ? (float)Math.Pow(cosBeta, ShininessExponent) : 0;
 
-        var red = DiffuseCoefficient * LightColor.R * ObjectColor.R * cosAlpha +
-            SpecularCoefficient * LightColor.R * ObjectColor.R * cosBeta;
+        var lightColorVector = Color2Vector3(LightColor);
+        var objectColorVector = Color2Vector3(ObjectColor);
 
-        var green = DiffuseCoefficient * LightColor.G * ObjectColor.G * cosAlpha +
-            SpecularCoefficient * LightColor.G * ObjectColor.G * cosBeta;
+        var rgb = DiffuseCoefficient * lightColorVector * objectColorVector * cosAlpha +
+            SpecularCoefficient * lightColorVector * objectColorVector * cosBeta;
 
-        var blue = DiffuseCoefficient * LightColor.B * ObjectColor.B * cosAlpha +
-            SpecularCoefficient * LightColor.B * ObjectColor.B * cosBeta;
+        rgb.X = Math.Min(1, rgb.X);
+        rgb.Y = Math.Min(1, rgb.Y);
+        rgb.Z = Math.Min(1, rgb.Z);
 
-        red = Math.Min(255, Math.Max(0, red * 255));
-        green = Math.Min(255, Math.Max(0, green * 255));
-        blue = Math.Min(255, Math.Max(0, blue * 255));
+        rgb *= byte.MaxValue;
 
-        return Color.FromArgb((int)red, (int)green, (int)blue);
+        return Color.FromArgb((int)rgb.X, (int)rgb.Y, (int)rgb.Z);
+    }
+
+    private static Vector3 Color2Vector3(Color color)
+    {
+        return new Vector3(color.R, color.G, color.B) / byte.MaxValue;
     }
 }

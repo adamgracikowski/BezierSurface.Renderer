@@ -38,7 +38,7 @@ public partial class BezierSurfaceRendererForm : Form
         {
             RendererManager.LambertModel.LightPosition = Animation.NewLightPosition(RendererManager.LambertModel.LightPosition.Z);
             RendererManager.Render();
-            this.Text = RendererManager.LambertModel.LightPosition.ToString();
+            // this.Text = RendererManager.LambertModel.LightPosition.ToString();
         };
     }
     private void LightSourceColorButton_Click(object sender, EventArgs e)
@@ -140,7 +140,6 @@ public partial class BezierSurfaceRendererForm : Form
 
         return bezierSurface;
     }
-
     private LambertModel InitializeLambertModel()
     {
         DiffuseCoefficientTrackBar.Value = (int)(100 * LambertModelConstants.DefaultDiffuseCoefficient);
@@ -152,7 +151,6 @@ public partial class BezierSurfaceRendererForm : Form
 
         return new LambertModel();
     }
-
     private void ResolutionTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, ResolutionTrackBarValueLabel);
@@ -228,12 +226,11 @@ public partial class BezierSurfaceRendererForm : Form
         UpdateTrackBarLabel(DiffuseCoefficientTrackBar, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
         UpdateTrackBarLabel(SpecularCoefficientTrackBar, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
     }
-
     private void EnableNormalMapCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         SelectNormalMapButton.Enabled = !SelectNormalMapButton.Enabled;
+        RendererManager.ShouldDrawNormalMap = SelectNormalMapButton.Enabled;
     }
-
     private void SelectNormalMapButton_Click(object sender, EventArgs e)
     {
         var initialDirectory = Path.Combine(Application.StartupPath, "Images");
@@ -259,9 +256,25 @@ public partial class BezierSurfaceRendererForm : Form
 
         if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
-        // TODO: ustawienie normal map...
-    }
+        try
+        {
+            var normalMap = new Bitmap(openFileDialog.FileName);
+            RendererManager.NormalMap?.Dispose();
+            RendererManager.NormalMap = normalMap;
+            RendererManager.Render();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"Failed to load the normal map: {ex.Message}",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
 
+            return;
+        }
+    }
     private void ShowGridCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         RendererManager.ShowGrid = !RendererManager.ShowGrid;
