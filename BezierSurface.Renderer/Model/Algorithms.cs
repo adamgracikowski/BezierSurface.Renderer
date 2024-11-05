@@ -15,12 +15,7 @@ public static class Algorithms
             {
                 var v = (float)j / (resolution - 1);
 
-                var point = CalculateBezierPoint(u, v, bezierSurface);
-                var tangentU = CalculateTangentU(u, v, bezierSurface);
-                var tangentV = CalculateTangentV(u, v, bezierSurface);
-                var normal = Vector3.Cross(tangentU, tangentV);
-
-                vertices[i, j] = new Vertex(point, tangentU, tangentV, normal);
+                vertices[i, j] = new Vertex(u, v, bezierSurface);
             }
         }
 
@@ -42,7 +37,8 @@ public static class Algorithms
 
         return (triangles, vertices);
     }
-    private static Vector3 CalculateTangentV(float u, float v, BezierSurface bezierSurface)
+
+    public static Vector3 CalculateTangentV(float u, float v, BezierSurface bezierSurface)
     {
         var tangent = Vector3.Zero;
         var n = BezierSurface.CurveDegree;
@@ -60,7 +56,7 @@ public static class Algorithms
 
         return tangent * m;
     }
-    private static Vector3 CalculateTangentU(float u, float v, BezierSurface bezierSurface)
+    public static Vector3 CalculateTangentU(float u, float v, BezierSurface bezierSurface)
     {
         var tangent = Vector3.Zero;
         var n = BezierSurface.CurveDegree;
@@ -78,7 +74,7 @@ public static class Algorithms
 
         return tangent * n;
     }
-    private static Vector3 CalculateBezierPoint(float u, float v, BezierSurface bezierSurface)
+    public static Vector3 CalculateBezierPoint(float u, float v, BezierSurface bezierSurface)
     {
         var vector = Vector3.Zero;
         var n = BezierSurface.CurveDegree;
@@ -158,7 +154,6 @@ public static class Algorithms
 
         return new Vector3(nx, ny, nz); // Zwraca wektor normalny
     }
-
 
     public static class Bernstein
     {

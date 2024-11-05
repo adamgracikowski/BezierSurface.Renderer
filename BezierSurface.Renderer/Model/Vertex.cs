@@ -4,12 +4,16 @@ namespace BezierSurface.Renderer.Model;
 
 public sealed class Vertex
 {
-    public Vertex(Vector3 position, Vector3 tangentU, Vector3 tangentV, Vector3 normal)
+    public Vertex(float u, float v, BezierSurface bezierSurface)
     {
-        Position = position;
-        TangentU = tangentU;
-        TangentV = tangentV;
-        Normal = normal;
+        U = u;
+        V = v;
+        BezierSurface = bezierSurface;
+
+        Position = Algorithms.CalculateBezierPoint(u, v, bezierSurface);
+        TangentU = Algorithms.CalculateTangentU(u, v, bezierSurface);
+        TangentV = Algorithms.CalculateTangentV(u, v, bezierSurface);
+        Normal = Vector3.Cross(TangentU, TangentV);
 
         PositionAfterRotation = Position;
         TangentUAfterRotation = TangentU;
@@ -17,6 +21,9 @@ public sealed class Vertex
         NormalAfterRotation = Normal;
     }
 
+    public float U { get; set; }
+    public float V { get; set; }
+    public BezierSurface BezierSurface { get; }
     public Vector3 Position { get; set; }
     public Vector3 PositionAfterRotation { get; set; }
 
