@@ -34,8 +34,6 @@ public partial class BezierSurfaceRendererForm : Form
             Interval = 100
         };
 
-        var direction = 1;
-
         Timer.Tick += (s, e) =>
         {
             RendererManager.LambertModel.LightPosition = Animation.NewLightPosition(RendererManager.LambertModel.LightPosition.Z);
@@ -43,7 +41,6 @@ public partial class BezierSurfaceRendererForm : Form
             this.Text = RendererManager.LambertModel.LightPosition.ToString();
         };
     }
-
     private void LightSourceColorButton_Click(object sender, EventArgs e)
     {
         using var colorDialog = new ColorDialog()
@@ -110,7 +107,6 @@ public partial class BezierSurfaceRendererForm : Form
         DrawingStyles.Dispose();
         Application.Exit();
     }
-
     private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var about = Resources.ResourceManager.GetObject("about");
@@ -125,7 +121,6 @@ public partial class BezierSurfaceRendererForm : Form
             MessageBoxIcon.Information
         );
     }
-
     private void UserguideToolStripMenuItem_Click(object sender, EventArgs e)
     {
         // TODO: napisać i dodać userguide.txt...
@@ -164,28 +159,24 @@ public partial class BezierSurfaceRendererForm : Form
         RendererManager.Resolution = (sender as TrackBar).Value;
         RendererManager.Render();
     }
-
     private void AlphaAngleTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, AlphaAngleTrackBarValueLabel);
         RendererManager.Alpha = (sender as TrackBar).Value;
         RendererManager.Render();
     }
-
     private void BetaAngleTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, BetaAngleTrackBarValueLabel);
         RendererManager.Beta = (sender as TrackBar).Value;
         RendererManager.Render();
     }
-
     private void ShininessExponentTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, ShininessExponentTrackBarValueLabel);
         RendererManager.LambertModel.ShininessExponent = (sender as TrackBar).Value;
         RendererManager.Render();
     }
-
     private void LightSourceDistanceTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, LightSourceDistanceTrackBarValueLabel);
@@ -198,21 +189,18 @@ public partial class BezierSurfaceRendererForm : Form
 
         RendererManager.Render();
     }
-
     private void DiffuseCoefficientTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, DiffuseCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
         RendererManager.LambertModel.DiffuseCoefficient = (sender as TrackBar).Value / 100.0f;
         RendererManager.Render();
     }
-
     private void SpecularCoefficientTrackBar_Scroll(object sender, EventArgs e)
     {
         UpdateTrackBarLabel(sender, SpecularCoefficientTrackBarValueLabel, TrackBarValueFormatFloat);
         RendererManager.LambertModel.SpecularCoefficient = (sender as TrackBar).Value / 100.0f;
         RendererManager.Render();
     }
-
     private void UpdateTrackBarLabel(object sender, Label label, Func<float, string>? transformation = null)
     {
         if (sender is not TrackBar trackBar) return;
@@ -279,13 +267,11 @@ public partial class BezierSurfaceRendererForm : Form
         RendererManager.ShowGrid = !RendererManager.ShowGrid;
         RendererManager.Render();
     }
-
     private void ShowControlPointsCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         RendererManager.ShowControlPoints = !RendererManager.ShowControlPoints;
         RendererManager.Render();
     }
-
     private void LightSourceAnimationCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         if (LightSourceAnimationCheckBox.Checked)
@@ -296,5 +282,10 @@ public partial class BezierSurfaceRendererForm : Form
         {
             Timer?.Stop();
         }
+    }
+    private void ShowSurfaceCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        RendererManager.ShowSurface = !RendererManager.ShowSurface;
+        RendererManager.Render();
     }
 }

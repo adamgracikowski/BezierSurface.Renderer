@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace BezierSurface.Renderer.Model;
+﻿namespace BezierSurface.Renderer.Model;
 
 public static class GraphicsExtensions
 {
@@ -12,6 +10,15 @@ public static class GraphicsExtensions
         {
             var points = triangle.Vertices.Select(v => v.Point).ToArray();
             graphics.DrawPolygon(pen, points);
+        }
+    }
+
+    public static void DrawBezierSurface(this Graphics graphics, BezierSurfaceMesh bezierSurfaceMesh, LambertModel lambertModel)
+    {
+        var pollygonFiller = new PolygonFiller(lambertModel);
+        foreach (var triangle in bezierSurfaceMesh.Triangles)
+        {
+            pollygonFiller.FillPolygon(graphics, triangle.Vertices);
         }
     }
 

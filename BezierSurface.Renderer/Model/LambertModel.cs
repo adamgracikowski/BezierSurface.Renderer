@@ -6,7 +6,7 @@ public static class LambertModelConstants
 {
     public static readonly Color DefaultLightColor = Color.Yellow;
     public static readonly Color DefaultObjectColor = Color.Green;
-    public static readonly Vector3 DefaultLightPosition = 100 * Vector3.UnitZ;
+    public static readonly Vector3 DefaultLightPosition = 300 * Vector3.UnitZ;
     public static readonly float DefaultDiffuseCoefficient = 0.5f;
     public static readonly float DefaultSpecularCoefficient = 0.5f;
     public static readonly int DefaultShininessExponent = 1;
@@ -56,7 +56,9 @@ public class LambertModel
         var v = Vector3.UnitZ;
 
         var cosAlpha = Math.Max(0, Vector3.Dot(n, l));
-        var cosBeta = (float)Math.Pow(Math.Max(0, Vector3.Dot(v, r)), ShininessExponent);
+        var cosBeta = Math.Max(0, Vector3.Dot(v, r));
+
+        cosBeta = cosBeta > 0 ? (float)Math.Pow(cosBeta, ShininessExponent) : 0;
 
         var red = DiffuseCoefficient * LightColor.R * ObjectColor.R * cosAlpha +
             SpecularCoefficient * LightColor.R * ObjectColor.R * cosBeta;

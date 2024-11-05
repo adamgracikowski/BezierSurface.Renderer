@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace BezierSurface.Renderer.Model;
 
@@ -97,6 +98,58 @@ public static class Algorithms
         return vector;
     }
 
+    public static (float u, float v, float w) CalculateBarycentric(Vector2 p, Vector3 a3, Vector3 b3, Vector3 c3)
+    {
+        var a = new Vector2(a3.X, a3.Y);
+        var b = new Vector2(b3.X, b3.Y);
+        var c = new Vector2(c3.X, c3.Y);
+
+        var v0 = b - a;
+        var v1 = c - a;
+        var v2 = p - a;
+
+        var d00 = Vector2.Dot(v0, v0);
+        var d01 = Vector2.Dot(v0, v1);
+        var d11 = Vector2.Dot(v1, v1);
+        var d20 = Vector2.Dot(v2, v0);
+        var d21 = Vector2.Dot(v2, v1);
+
+        var denom = d00 * d11 - d01 * d01;
+
+
+        var v = (d11 * d20 - d01 * d21) / denom;
+        var w = (d00 * d21 - d01 * d20) / denom;
+        var u = 1.0f - v - w;
+
+        if (Math.Abs(denom) < 1e-6f)
+        {
+            return (float.NaN, float.NaN, float.NaN);
+        }
+
+        return (u, v, w);
+    }
+
+    public static (Vector3 n, float z) InterpolateBarycentric(Vector2 p, Vector3 a, Vector3 b, Vector3 c, Vector3 n1, Vector3 n2, Vector3 n3)
+    {
+        var (u, v, w) = CalculateBarycentric(p, a, b, c);
+
+        if (float.IsNaN(u))
+        {
+            return (Vector3.Zero, float.NaN);
+        }
+
+        var n = u * n1 + v * n2 + w * n3;
+        var z = u * a.Z + v * b.Z + w * c.Z;
+
+        if (float.IsNaN(z))
+        {
+            Debugger.Break();
+        }
+
+        return (Vector3.Normalize(n), z);
+    }
+
+
     public static class Bernstein
     {
         public static float Coefficient(int i, int n, float t)
@@ -111,6 +164,102 @@ public static class Algorithms
         public static int Coefficient(int n, int k)
         {
             return _coefficients[n][k];
+        }
+    }
+}
+
+public class PolygonFiller
+{
+    public LambertModel LambertModel { get; }
+
+    public PolygonFiller(LambertModel lambertModel)
+    {
+        LambertModel = lambertModel;
+    }
+
+    private class Edge
+    {
+        public int YMax { get; set; }
+        public float X { get; set; }
+        public float InverseSlope { get; set; }
+
+        public Edge(int yMax, float x, float inverseSlope)
+        {
+            YMax = yMax;
+            X = x;
+            InverseSlope = inverseSlope;
+        }
+    }
+
+    public void FillPolygon(Graphics g, Vertex[] vertices)
+    {
+        var minY = vertices.Min(v => (int)v.PositionAfterRotation.Y);
+        var maxY = vertices.Max(v => (int)v.PositionAfterRotation.Y);
+
+        var edgeTable = new List<Edge>[maxY - minY + 1];
+
+        for (var i = 0; i < edgeTable.Length; i++)
+        {
+            edgeTable[i] = [];
+        }
+
+        for (var i = 0; i < vertices.Length; i++)
+        {
+            var start = vertices[i];
+            var end = vertices[(i + 1) % vertices.Length];
+
+            if (start.PositionAfterRotation.Y > end.PositionAfterRotation.Y)
+            {
+                (end, start) = (start, end);
+            }
+
+            if (start.PositionAfterRotation.Y != end.PositionAfterRotation.Y)
+            {
+                var inverseSlope = (float)(end.PositionAfterRotation.X - start.PositionAfterRotation.X) / 
+                    (end.PositionAfterRotation.Y - start.PositionAfterRotation.Y);
+                edgeTable[(int)start.PositionAfterRotation.Y - minY].Add(new Edge((int)end.PositionAfterRotation.Y, start.PositionAfterRotation.X, inverseSlope));
+            }
+        }
+
+        var activeEdges = new List<Edge>();
+
+        for (var y = minY; y <= maxY; y++)
+        {
+            activeEdges.AddRange(edgeTable[y - minY]);
+            activeEdges.RemoveAll(edge => edge.YMax == y);
+            activeEdges.Sort((e1, e2) => e1.X.CompareTo(e2.X));
+
+            for (var i = 0; i < activeEdges.Count; i += 2)
+            {
+                var xStart = (int)Math.Ceiling(activeEdges[i].X);
+                var xEnd = (int)Math.Floor(activeEdges[i + 1].X);
+
+                for (var x = xStart; x <= xEnd; x++)
+                {
+                    var (n, z) = Algorithms.InterpolateBarycentric(
+                        new Vector2(x, y),
+                        vertices[0].PositionAfterRotation,
+                        vertices[1].PositionAfterRotation,
+                        vertices[2].PositionAfterRotation,
+                        vertices[0].NormalAfterRotation,
+                        vertices[1].NormalAfterRotation,
+                        vertices[2].NormalAfterRotation
+                    );
+
+                    if (float.IsNaN(z))
+                        continue;
+
+                    var color = LambertModel.CalculateColor(n, new Vector3(x, y, z));
+                    
+                    using var brush = new SolidBrush(color);
+                    g.FillRectangle(brush, x, y, 1, 1);
+                }
+            }
+
+            foreach (var edge in activeEdges)
+            {
+                edge.X += edge.InverseSlope;
+            }
         }
     }
 }

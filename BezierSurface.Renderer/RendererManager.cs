@@ -12,6 +12,7 @@ public sealed class RendererManager : IDisposable
 
     public bool ShowControlPoints { get; set; } = true;
     public bool ShowGrid { get; set; } = true;
+    public bool ShowSurface { get; set; } = true;
 
     public float Alpha
     {
@@ -85,6 +86,11 @@ public sealed class RendererManager : IDisposable
         using var graphics = Graphics.FromImage(Buffer);
 
         graphics.SetCoordinateCenter(Buffer.Width / 2.0f, -Buffer.Height / 2.0f);
+
+        if (ShowSurface)
+        {
+            graphics.DrawBezierSurface(BezierSurfaceMesh, LambertModel);
+        }
 
         if (ShowControlPoints)
         {
