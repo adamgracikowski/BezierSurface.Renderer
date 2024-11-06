@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace BezierSurface.Renderer.Model;
 
@@ -21,30 +22,16 @@ public sealed class NormalMap : IDisposable
         u = Math.Clamp(u, 0, 1);
         v = Math.Clamp(v, 0, 1);
 
-        var x = (int)(u * (Bitmap.Width - 1));
-        var y = (int)(v * (Bitmap.Height - 1));
+        var x = (int)((1 - v) * (Bitmap.Width - 1));
+        var y = (int)(u * (Bitmap.Height - 1));
 
         var color = Bitmap.GetPixel(x, y);
 
-        var transform = (float x) =>
-        {
-            var byteHalf = byte.MaxValue / 2;
-            if (x > byteHalf)
-                x = (x - byteHalf) / (byteHalf + 1);
-            else if (x < byteHalf - 1)
-                x = -x / (byteHalf - 1);
-            else
-                x = 0;
-            return x;
-        };
+        var byteMax = (float)byte.MaxValue;
 
-        var nx = transform(color.R);
-        var ny = transform(color.G);
-        var nz = transform(color.B);
-
-        //var nx = (color.R / byte.MaxValue) * 2f - 1;
-        //var ny = (color.G / byte.MaxValue) * 2f - 1;
-        ////var nz = (color.B / byte.MaxValue);
+        var nx = (color.R / byteMax) * 2 - 1;
+        var ny = (color.G / byteMax) * 2 - 1;
+        var nz = Math.Clamp((int)color.B, 128, 255) / 255;
 
         var normal = new Vector3(nx, ny, nz);
 

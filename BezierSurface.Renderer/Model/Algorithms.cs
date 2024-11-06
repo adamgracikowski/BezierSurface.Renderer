@@ -188,21 +188,6 @@ public static class Algorithms
         return result;
     }
 
-    //private static Vector3 GetNormalFromTexture(Bitmap normalMap, int index)
-    //{
-    //    int x = index % normalMap.Width; // Oblicza współrzędną x
-    //    int y = index / normalMap.Width; // Oblicza współrzędną y
-
-    //    Color color = normalMap.GetPixel(x, y); // Odczytuje kolor z tekstury
-
-    //    // Przekształca kolor RGB do wektora normalnego
-    //    float nx = (color.R / 255f) * 2 - 1; // Ustala składową x (-1 do 1)
-    //    float ny = (color.G / 255f) * 2 - 1; // Ustala składową y (-1 do 1)
-    //    float nz = (color.B / 255f) / 255f; // Ustala składową z (0 do 1)
-
-    //    return new Vector3(nx, ny, nz); // Zwraca wektor normalny
-    //}
-
     public static class Bernstein
     {
         public static float Coefficient(int i, int n, float t)
