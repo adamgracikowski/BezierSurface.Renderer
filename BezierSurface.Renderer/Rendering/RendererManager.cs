@@ -86,7 +86,7 @@ public sealed class RendererManager : IDisposable
         PictureBox.Refresh();
     }
 
-    private void ApplyRotations()
+    public void ApplyRotations()
     {
         BezierSurfaceMesh.RotateXByBetaZByAlpha(_beta, _alpha);
     }

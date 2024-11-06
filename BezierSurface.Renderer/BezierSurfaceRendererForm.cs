@@ -111,6 +111,7 @@ public partial class BezierSurfaceRendererForm : Form
 
             var bezierSurfaceMesh = new BezierSurfaceMesh(bezierSurface, RendererManager.Resolution);
             RendererManager.BezierSurfaceMesh = bezierSurfaceMesh;
+            RendererManager.ApplyRotations();
             RendererManager.Render();
         }
         catch (Exception ex)
