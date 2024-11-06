@@ -36,7 +36,6 @@ partial class BezierSurfaceRendererForm
         ExitToolStripMenuItem = new ToolStripMenuItem();
         HelpToolStripMenuItem = new ToolStripMenuItem();
         AboutToolStripMenuItem = new ToolStripMenuItem();
-        UserguideToolStripMenuItem = new ToolStripMenuItem();
         PictureBox = new PictureBox();
         panel1 = new Panel();
         NormalMapGroupBox = new GroupBox();
@@ -153,7 +152,7 @@ partial class BezierSurfaceRendererForm
         // 
         // HelpToolStripMenuItem
         // 
-        HelpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { AboutToolStripMenuItem, UserguideToolStripMenuItem });
+        HelpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { AboutToolStripMenuItem });
         HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
         HelpToolStripMenuItem.Size = new Size(55, 24);
         HelpToolStripMenuItem.Text = "&Help";
@@ -162,17 +161,9 @@ partial class BezierSurfaceRendererForm
         // 
         AboutToolStripMenuItem.Image = (Image)resources.GetObject("AboutToolStripMenuItem.Image");
         AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-        AboutToolStripMenuItem.Size = new Size(159, 26);
+        AboutToolStripMenuItem.Size = new Size(224, 26);
         AboutToolStripMenuItem.Text = "&About";
         AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
-        // 
-        // UserguideToolStripMenuItem
-        // 
-        UserguideToolStripMenuItem.Image = (Image)resources.GetObject("UserguideToolStripMenuItem.Image");
-        UserguideToolStripMenuItem.Name = "UserguideToolStripMenuItem";
-        UserguideToolStripMenuItem.Size = new Size(159, 26);
-        UserguideToolStripMenuItem.Text = "&Userguide";
-        UserguideToolStripMenuItem.Click += UserguideToolStripMenuItem_Click;
         // 
         // PictureBox
         // 
@@ -747,7 +738,6 @@ partial class BezierSurfaceRendererForm
     private ToolStripMenuItem ExitToolStripMenuItem;
     private ToolStripMenuItem HelpToolStripMenuItem;
     private ToolStripMenuItem AboutToolStripMenuItem;
-    private ToolStripMenuItem UserguideToolStripMenuItem;
     private PictureBox PictureBox;
     private Panel panel1;
     private GroupBox TriangulationGroupBox;

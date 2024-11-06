@@ -1,18 +1,20 @@
 ﻿using System.Numerics;
+using BezierSurface.Renderer.Bezier;
+using BezierSurface.Renderer.Extensions;
 
-namespace BezierSurface.Renderer.Model;
+namespace BezierSurface.Renderer.Models;
 
 public sealed class Vertex
 {
-    public Vertex(float u, float v, BezierSurface bezierSurface)
+    public Vertex(float u, float v, Surface surface)
     {
         U = u;
         V = v;
-        BezierSurface = bezierSurface;
+        Surface = surface;
 
-        Position = Algorithms.CalculateBezierPoint(u, v, bezierSurface);
-        TangentU = Algorithms.CalculateTangentU(u, v, bezierSurface);
-        TangentV = Algorithms.CalculateTangentV(u, v, bezierSurface);
+        Position = Surface.CalculateBezierPoint(u, v);
+        TangentU = Surface.CalculateTangentU(u, v);
+        TangentV = Surface.CalculateTangentV(u, v);
         Normal = Vector3.Cross(TangentU, TangentV);
 
         PositionAfterRotation = Position;
@@ -23,7 +25,7 @@ public sealed class Vertex
 
     public float U { get; set; }
     public float V { get; set; }
-    public BezierSurface BezierSurface { get; }
+    public Surface Surface { get; }
     public Vector3 Position { get; set; }
     public Vector3 PositionAfterRotation { get; set; }
 

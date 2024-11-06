@@ -1,18 +1,14 @@
-﻿using System.Diagnostics;
+﻿using BezierSurface.Renderer.Extensions;
 using System.Numerics;
 
-namespace BezierSurface.Renderer.Model;
+namespace BezierSurface.Renderer.Rendering;
 
-public sealed class NormalMap : IDisposable
+public sealed class NormalMap : RenderComponentBase
 {
-    public NormalMap(bool inUse = true, Bitmap? bitmap = null)
+    public NormalMap(bool inUse = true, Bitmap? bitmap = null) 
+        : base(inUse, bitmap)
     {
-        InUse = inUse;
-        Bitmap = bitmap;
     }
-
-    public bool InUse { get; set; }
-    public Bitmap? Bitmap { get; set; }
 
     public Vector3 GetNormalVector(float u, float v, Matrix3 rotationMatrix)
     {
@@ -29,23 +25,12 @@ public sealed class NormalMap : IDisposable
 
         var byteMax = (float)byte.MaxValue;
 
-        var nx = (color.R / byteMax) * 2 - 1;
-        var ny = (color.G / byteMax) * 2 - 1;
+        var nx = color.R / byteMax * 2 - 1;
+        var ny = color.G / byteMax * 2 - 1;
         var nz = Math.Clamp((int)color.B, 128, 255) / 255;
 
         var normal = new Vector3(nx, ny, nz);
 
         return rotationMatrix * normal;
-    }
-
-    public void SetNormalMap(Bitmap normalMap)
-    {
-        Bitmap?.Dispose();
-        Bitmap = normalMap;
-    }
-
-    public void Dispose()
-    {
-        Bitmap?.Dispose();
     }
 }

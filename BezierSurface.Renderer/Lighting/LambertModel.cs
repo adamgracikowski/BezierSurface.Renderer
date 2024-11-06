@@ -1,16 +1,7 @@
-﻿using System.Numerics;
+﻿using BezierSurface.Renderer.Extensions;
+using System.Numerics;
 
-namespace BezierSurface.Renderer.Model;
-
-public static class LambertModelConstants
-{
-    public static readonly Color DefaultLightColor = Color.White;
-    public static readonly Color DefaultObjectColor = Color.Green;
-    public static readonly Vector3 DefaultLightPosition = 300 * Vector3.UnitZ;
-    public static readonly float DefaultDiffuseCoefficient = 0.5f;
-    public static readonly float DefaultSpecularCoefficient = 0.5f;
-    public static readonly int DefaultShininessExponent = 1;
-}
+namespace BezierSurface.Renderer.Lighting;
 
 public class LambertModel
 {
@@ -49,7 +40,7 @@ public class LambertModel
 
     public Color CalculateColor(Vector3 n, Vector3 point, Vector3? objectColor = null)
     {
-        if(n != Vector3.Zero)
+        if (n != Vector3.Zero)
             n = Vector3.Normalize(n);
 
         var l = Vector3.Normalize(LightPosition - point);
@@ -61,8 +52,8 @@ public class LambertModel
 
         cosBeta = cosBeta > 0 ? (float)Math.Pow(cosBeta, ShininessExponent) : 0;
 
-        var lightColorVector = Color2Vector3(LightColor);
-        var objectColorVector = objectColor ?? Color2Vector3(ObjectColor);
+        var lightColorVector = LightColor.ConvertToVector3();
+        var objectColorVector = objectColor ?? ObjectColor.ConvertToVector3();
 
         var rgb = DiffuseCoefficient * lightColorVector * objectColorVector * cosAlpha +
             SpecularCoefficient * lightColorVector * objectColorVector * cosBeta;
@@ -74,10 +65,5 @@ public class LambertModel
         rgb *= byte.MaxValue;
 
         return Color.FromArgb((int)rgb.X, (int)rgb.Y, (int)rgb.Z);
-    }
-
-    private static Vector3 Color2Vector3(Color color)
-    {
-        return new Vector3(color.R, color.G, color.B) / byte.MaxValue;
     }
 }

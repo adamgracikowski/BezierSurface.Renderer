@@ -1,4 +1,4 @@
-﻿namespace BezierSurface.Renderer.Model;
+﻿namespace BezierSurface.Renderer;
 
 public static class DrawingStyles
 {

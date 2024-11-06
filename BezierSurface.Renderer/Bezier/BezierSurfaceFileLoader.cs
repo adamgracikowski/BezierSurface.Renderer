@@ -1,42 +1,21 @@
 ﻿using System.Globalization;
 
-namespace BezierSurface.Renderer.Model;
-
-public sealed class BezierSurface
-{
-    public static readonly int CurveDegree = 3;
-    public static readonly int ControlPointsInOneDimension = 4;
-    public static readonly int ControlPointsInSurface = ControlPointsInOneDimension * ControlPointsInOneDimension;
-
-    public ControlPoint[,] ControlPoints { get; set; }
-        = new ControlPoint[
-            ControlPointsInOneDimension,
-            ControlPointsInOneDimension
-        ];
-
-    public void Rotate(Matrix3 rotationX, Matrix3 rotationZ)
-    {
-        foreach(var controlPoint in ControlPoints)
-        {
-            controlPoint.Rotate(rotationX, rotationZ);
-        }
-    }
-}
+namespace BezierSurface.Renderer.Bezier;
 
 public static class BezierSurfaceFileLoader
 {
-    public static bool TryLoadControlPointsFromFileContent(string content, out BezierSurface bezierSurface)
+    public static bool TryLoadControlPointsFromFileContent(string content, out Surface bezierSurface)
     {
-        bezierSurface = new BezierSurface();
+        bezierSurface = new Surface();
 
         try
         {
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
-            if (lines.Length != BezierSurface.ControlPointsInSurface)
+            if (lines.Length != Surface.ControlPointsInSurface)
                 return false;
 
-            var dimension = BezierSurface.ControlPointsInOneDimension;
+            var dimension = Surface.ControlPointsInOneDimension;
 
             for (var i = 0; i < dimension; i++)
             {

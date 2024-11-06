@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
+using BezierSurface.Renderer.Extensions;
 
-namespace BezierSurface.Renderer.Model;
+namespace BezierSurface.Renderer.Bezier;
 
 public sealed class ControlPoint
 {

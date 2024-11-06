@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 
-namespace BezierSurface.Renderer.Model;
+namespace BezierSurface.Renderer.Extensions;
+
 public sealed class Matrix3
 {
     public const int Dimension = 3;

@@ -1,6 +1,8 @@
-﻿using BezierSurface.Renderer.Model;
+﻿using BezierSurface.Renderer.Bezier;
+using BezierSurface.Renderer.Extensions;
+using BezierSurface.Renderer.Lighting;
 
-namespace BezierSurface.Renderer;
+namespace BezierSurface.Renderer.Rendering;
 
 public sealed class RendererManager : IDisposable
 {
@@ -57,9 +59,9 @@ public sealed class RendererManager : IDisposable
     public PictureBox PictureBox { get; set; }
 
     public RendererManager(
-        BezierSurfaceMesh bezierSurfaceMesh, 
-        LambertModel lambertModel, 
-        Texture textureManager, 
+        BezierSurfaceMesh bezierSurfaceMesh,
+        LambertModel lambertModel,
+        Texture textureManager,
         NormalMap normalMap,
         PictureBox pictureBox)
     {
@@ -108,7 +110,7 @@ public sealed class RendererManager : IDisposable
 
         if (ShowControlPoints)
         {
-            graphics.DrawBezierSurfaceControlPoints(BezierSurfaceMesh.BezierSurface);
+            graphics.DrawBezierSurfaceControlPoints(BezierSurfaceMesh.Surface);
         }
 
         if (ShowGrid)

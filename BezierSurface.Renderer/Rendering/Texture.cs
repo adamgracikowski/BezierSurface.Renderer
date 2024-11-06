@@ -1,17 +1,13 @@
 ﻿using System.Numerics;
 
-namespace BezierSurface.Renderer.Model;
+namespace BezierSurface.Renderer.Rendering;
 
-public sealed class Texture : IDisposable
+public sealed class Texture : RenderComponentBase
 {
-    public Texture(bool inUse = true, Bitmap? bitmap = null)
+    public Texture(bool inUse = true, Bitmap? bitmap = null) 
+        : base(inUse, bitmap)
     {
-        InUse = inUse;
-        Bitmap = bitmap;
     }
-
-    public Bitmap? Bitmap { get; set; }
-    public bool InUse { get; set; }
 
     public Vector3 GetColor(float u, float v)
     {
@@ -33,16 +29,5 @@ public sealed class Texture : IDisposable
     private static Vector3 Color2Vector3(Color color)
     {
         return new Vector3(color.R, color.G, color.B) / byte.MaxValue;
-    }
-
-    public void SetTexture(Bitmap texture)
-    {
-        Bitmap?.Dispose();
-        Bitmap = texture;
-    }
-
-    public void Dispose()
-    {
-        Bitmap?.Dispose();
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace BezierSurface.Renderer.Model;
+﻿using BezierSurface.Renderer.Extensions;
+using BezierSurface.Renderer.Models;
+
+namespace BezierSurface.Renderer.Bezier;
 
 public static class BezierSurfaceMeshConstants
 {
@@ -7,15 +10,15 @@ public static class BezierSurfaceMeshConstants
 
 public sealed class BezierSurfaceMesh
 {
-    public BezierSurface BezierSurface { get; init; }
+    public Surface Surface { get; set; }
     public List<Triangle> Triangles { get; set; } = [];
     public Vertex[,]? Vertices { get; set; } = null;
 
     private int _resolution;
 
-    public BezierSurfaceMesh(BezierSurface bezierSurface, int resolution)
+    public BezierSurfaceMesh(Surface surface, int resolution)
     {
-        BezierSurface = bezierSurface;
+        Surface = surface;
         Resolution = resolution;
     }
 
@@ -28,7 +31,7 @@ public sealed class BezierSurfaceMesh
 
             _resolution = value;
 
-            (Triangles, Vertices) = Algorithms.GenerateMesh(BezierSurface, _resolution);
+            (Triangles, Vertices) = Surface.GenerateMesh(_resolution);
         }
     }
 
@@ -44,6 +47,6 @@ public sealed class BezierSurfaceMesh
             vertex.Rotate(rotationX, rotationZ);
         }
 
-        BezierSurface.Rotate(rotationX, rotationZ);
+        Surface.Rotate(rotationX, rotationZ);
     }
 }
