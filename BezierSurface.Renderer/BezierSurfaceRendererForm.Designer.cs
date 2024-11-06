@@ -161,7 +161,7 @@ partial class BezierSurfaceRendererForm
         // 
         AboutToolStripMenuItem.Image = (Image)resources.GetObject("AboutToolStripMenuItem.Image");
         AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-        AboutToolStripMenuItem.Size = new Size(224, 26);
+        AboutToolStripMenuItem.Size = new Size(133, 26);
         AboutToolStripMenuItem.Text = "&About";
         AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
         // 
@@ -627,8 +627,8 @@ partial class BezierSurfaceRendererForm
         // 
         AlphaAngleTrackBar.Dock = DockStyle.Fill;
         AlphaAngleTrackBar.Location = new Point(182, 67);
-        AlphaAngleTrackBar.Maximum = 180;
-        AlphaAngleTrackBar.Minimum = -180;
+        AlphaAngleTrackBar.Maximum = 45;
+        AlphaAngleTrackBar.Minimum = -45;
         AlphaAngleTrackBar.Name = "AlphaAngleTrackBar";
         AlphaAngleTrackBar.Size = new Size(218, 26);
         AlphaAngleTrackBar.TabIndex = 5;
@@ -638,8 +638,8 @@ partial class BezierSurfaceRendererForm
         // 
         BetaAngleTrackBar.Dock = DockStyle.Fill;
         BetaAngleTrackBar.Location = new Point(182, 99);
-        BetaAngleTrackBar.Maximum = 180;
-        BetaAngleTrackBar.Minimum = -180;
+        BetaAngleTrackBar.Maximum = 45;
+        BetaAngleTrackBar.Minimum = -45;
         BetaAngleTrackBar.Name = "BetaAngleTrackBar";
         BetaAngleTrackBar.Size = new Size(218, 26);
         BetaAngleTrackBar.TabIndex = 6;

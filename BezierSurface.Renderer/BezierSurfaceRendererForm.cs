@@ -58,7 +58,7 @@ public partial class BezierSurfaceRendererForm : Form
     private NormalMap InitializeNormalMap()
     {
         var imagesDirectory = Path.Combine(Application.StartupPath, "Images");
-        var defaultNormalMap = Path.Combine(imagesDirectory, "sofa.png");
+        var defaultNormalMap = Path.Combine(imagesDirectory, "bricks.png");
 
         var bitmap = new Bitmap(defaultNormalMap);
 
@@ -67,7 +67,7 @@ public partial class BezierSurfaceRendererForm : Form
     private Texture InitializeTexture()
     {
         var texturesDirectory = Path.Combine(Application.StartupPath, "Textures");
-        var defaultTexture = Path.Combine(texturesDirectory, "ink.jpg");
+        var defaultTexture = Path.Combine(texturesDirectory, "marble.jpg");
 
         var bitmap = new Bitmap(defaultTexture);
 
@@ -90,10 +90,13 @@ public partial class BezierSurfaceRendererForm : Form
 
     private void ImportSurfaceToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        var initialDirectory = Path.Combine(Application.StartupPath, "Resources");
+
         using var openFileDialog = new OpenFileDialog()
         {
             Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*",
-            Title = "Select a Text File with a Bezier Surface"
+            Title = "Select a Text File with a Bezier Surface",
+            InitialDirectory = initialDirectory,
         };
 
         if (openFileDialog.ShowDialog() != DialogResult.OK) return;
