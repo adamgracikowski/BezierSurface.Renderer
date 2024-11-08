@@ -27,10 +27,11 @@ public sealed class NormalMap : RenderComponentBase
 
         var nx = color.R / byteMax * 2 - 1;
         var ny = color.G / byteMax * 2 - 1;
-        var nz = Math.Clamp((int)color.B, 128, 255) / 255;
+        var nz = color.B / byteMax;
 
         var normal = new Vector3(nx, ny, nz);
+        var result = Vector3.Normalize(rotationMatrix * normal);
 
-        return rotationMatrix * normal;
+        return result;
     }
 }

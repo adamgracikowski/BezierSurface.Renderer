@@ -36,13 +36,19 @@ public static class BarycentricInterpolation
             v * triangle.Vertex2.NormalAfterRotation +
             w * triangle.Vertex3.NormalAfterRotation;
 
+        result.Normal = Vector3.Normalize(result.Normal);
+
         result.TangentU = u * triangle.Vertex1.TangentUAfterRotation +
             v * triangle.Vertex2.TangentUAfterRotation +
             w * triangle.Vertex3.TangentUAfterRotation;
 
+        result.TangentU = Vector3.Normalize(result.TangentU);
+
         result.TangentV = u * triangle.Vertex1.TangentVAfterRotation +
             v * triangle.Vertex2.TangentVAfterRotation +
             w * triangle.Vertex3.TangentVAfterRotation;
+
+        result.TangentV = Vector3.Normalize(result.TangentV);
 
         result.U = u * triangle.Vertex1.U +
             v * triangle.Vertex2.U +
@@ -51,7 +57,6 @@ public static class BarycentricInterpolation
         result.V = u * triangle.Vertex1.V +
             v * triangle.Vertex2.V +
             w * triangle.Vertex3.V;
-
 
         var x = u * triangle.Vertex1.Position.X +
             v * triangle.Vertex2.Position.X +
