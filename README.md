@@ -6,6 +6,10 @@ The project was implemented as a part of the Computer Graphics course at Warsaw 
 
 The surface supports interactive rotation and parameter adjustments. Texture mapping and normal vector mapping are also included to enhance surface details.
 
+<p align="center">
+  <img src="Images/01.PNG"/>
+</p>
+
 ## Features:
 
 - **File Input**: Bézier surface configurations are loaded from structured text files containing 16 control points allowing smooth curvature control.
@@ -15,3 +19,15 @@ The surface supports interactive rotation and parameter adjustments. Texture map
 - **Normal Mapping**: Normal maps can be applied to alter the surface normals, simulating finer surface details and depth for enhanced lighting effects.
 - **Animation**: User can turn on the animation mode, making the light source move in circles, creating dynamic lighting effects across the surface.
 - **3D Rotation**: The surface can be interactively rotated around the X and Z axes.
+
+<p align="center">
+  <img src="Images/02.PNG"/>
+</p>
+
+<p align="center">
+  <img src="Images/03.PNG"/>
+</p>
+
+<p align="center">
+  <img src="Images/04.PNG"/>
+</p>
